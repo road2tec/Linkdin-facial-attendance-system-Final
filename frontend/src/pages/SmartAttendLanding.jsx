@@ -16,7 +16,8 @@ import {
   Shield,
   Moon,
   Sun,
-  Lock
+  Lock,
+  Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeProvider';
