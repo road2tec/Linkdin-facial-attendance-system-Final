@@ -361,40 +361,40 @@ const SmartAttendLanding = () => {
       </section>
 
       {/* Footer */}
-      <footer className={`py-32 px-8 ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
+      <footer className={`py-16 px-8 ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
         <div className="container mx-auto text-center md:text-left">
-          <div className="grid md:grid-cols-4 gap-20">
+          <div className="grid md:grid-cols-4 gap-12">
             <div className="col-span-2">
-              <div className="flex items-center justify-center md:justify-start gap-2 mb-8">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-6">
                 <div className={`h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20`}>
                   <Activity className="text-white" size={20} />
                 </div>
                 <span className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>SmartAttend</span>
               </div>
-              <p className={`max-w-md text-base leading-relaxed mb-10 font-medium mx-auto md:mx-0 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <p className={`max-w-md text-base leading-relaxed mb-6 font-medium mx-auto md:mx-0 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                  State-of-the-art campus monitoring solutions for modern academic institutions.
               </p>
             </div>
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-sm mb-8 text-indigo-600">Explore</h4>
-              <ul className={`space-y-4 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-indigo-600">Explore</h4>
+              <ul className={`space-y-3 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
                 <li><a href="#stats" className="hover:text-indigo-600 transition-colors">Statistics</a></li>
                 <li><a href="#security" className="hover:text-indigo-600 transition-colors">Security</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-sm mb-8 text-indigo-600">Legal</h4>
-              <ul className={`space-y-4 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-indigo-600">Legal</h4>
+              <ul className={`space-y-3 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Privacy</a></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Terms</a></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Support</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-40 pt-16 border-t border-slate-200 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-10 text-slate-500 font-bold">
+          <div className="mt-20 pt-8 border-t border-slate-200 dark:border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 text-slate-500 font-bold">
              <p className="text-sm">© 2026 SmartAttend. Enhancing Education Safely.</p>
-             <div className="flex gap-16 text-sm">
+             <div className="flex gap-10 text-sm">
                <a href="#" className="hover:text-indigo-600 transition-all underline decoration-2 underline-offset-8">Twitter</a>
                <a href="#" className="hover:text-indigo-600 transition-all underline decoration-2 underline-offset-8">LinkedIn</a>
                <a href="#" className="hover:text-indigo-600 transition-all underline decoration-2 underline-offset-8">GitHub</a>
