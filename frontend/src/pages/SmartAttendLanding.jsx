@@ -123,21 +123,49 @@ const SmartAttendLanding = () => {
              <p className="text-xl text-slate-500 font-bold leading-relaxed max-w-xs">Modular precision tools built for the next generation of academic environments.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 relative">
             {[
-              { icon: <Camera size={28} />, title: 'Adaptive Bio-ID', text: 'Fast, secure facial matching that evolves with campus environments.' },
-              { icon: <MapPin size={28} />, title: 'Spatial Protocol', text: 'Geographical restrictions ensure physical presence within designated zones.' },
-              { icon: <LineChart size={28} />, title: 'Unified Data', text: 'Instant visual analytics and audit-ready reports for institutional compliance.' },
-              { icon: <Users size={28} />, title: 'Optimized Experience', text: 'Dedicated, world-class dashboards for both faculty and students.' },
-              { icon: <ShieldCheck size={28} />, title: 'Privacy Shield', text: 'Advanced decentralized encryption guarantees biometric data remains private.' },
-              { icon: <Zap size={28} />, title: 'Instant Execution', text: 'Cloud-native architecture ensures real-time processing under high-load.' },
+              { 
+                icon: <Camera size={32} />, 
+                title: 'Adaptive Bio-ID', 
+                text: 'State-of-the-art neural engine for fast, accurate facial matching that evolves with institutional environment changes.' 
+              },
+              { 
+                icon: <MapPin size={32} />, 
+                title: 'Geospatial Lock', 
+                text: 'Military-grade proximity boundaries ensuring physical presence within designated classroom zones with precise GPS verification.' 
+              },
+              { 
+                icon: <LineChart size={32} />, 
+                title: 'Auditable Data', 
+                text: 'Instantly generate compliance-ready reports and identify academic performance trends with high-fidelity visual analytics.' 
+              },
+              { 
+                icon: <Users size={32} />, 
+                title: 'Unified Experience', 
+                text: 'Tailored, role-based dashboard experiences providing students and faculty members with absolute clarity and control.' 
+              },
+              { 
+                icon: <ShieldCheck size={32} />, 
+                title: 'Privacy Protocol', 
+                text: 'Encrypted at rest and in transit. Our decentralized signatures ensure student biometric data remains sovereign and secure.' 
+              },
+              { 
+                icon: <Zap size={32} />, 
+                title: 'Real-time Execution', 
+                text: 'High-concurrency infrastructure built to support thousands of simultaneous scans without any performance degradation.' 
+              },
             ].map((f) => (
-              <div key={f.title} className="glass-card p-10 rounded-[40px] group hover:-translate-y-2 transition-all duration-500">
-                <div className={`h-16 w-16 rounded-[24px] mb-8 flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg ${isDark ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary/20' : 'bg-indigo-50 text-brand-primary'}`}>
+              <div key={f.title} className="glass-card-elite group p-12 rounded-[50px] relative overflow-hidden transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_40px_80px_rgba(139,92,246,0.15)] border-white/5 bg-white/5">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className={`h-20 w-20 rounded-3xl mb-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-2xl ${isDark ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary/20 shadow-brand-primary/10' : 'bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-indigo-600/5'}`}>
                   {f.icon}
                 </div>
-                <h3 className="text-2xl font-black tracking-tighter mb-4">{f.title}</h3>
-                <p className="text-base text-slate-500 leading-relaxed font-bold">{f.text}</p>
+                <h3 className="text-3xl font-black tracking-tighter mb-6 group-hover:text-gradient transition-all">{f.title}</h3>
+                <p className={`text-lg leading-relaxed font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
+                <div className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-x-4 group-hover:translate-x-0">
+                   <ArrowRight className="text-brand-primary" size={24} />
+                </div>
               </div>
             ))}
           </div>
