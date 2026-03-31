@@ -55,7 +55,7 @@ const SmartAttendLanding = () => {
               <a 
                 key={link.name} 
                 href={link.href} 
-                className={`text-[13px] font-semibold transition-all hover:text-indigo-600 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+                className={`text-[15px] font-semibold transition-all hover:text-indigo-600 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
               >
                 {link.name}
               </a>
@@ -71,13 +71,13 @@ const SmartAttendLanding = () => {
             </button>
             <button 
               onClick={() => navigate('/login')}
-              className={`px-6 py-3 rounded-2xl text-[13px] font-bold transition-all ${isDark ? 'text-slate-300 hover:bg-white/5' : 'text-slate-600 hover:bg-black/5'}`}
+              className={`px-6 py-3 rounded-2xl text-[15px] font-bold transition-all ${isDark ? 'text-slate-300 hover:bg-white/5' : 'text-slate-600 hover:bg-black/5'}`}
             >
               Log In
             </button>
             <button 
               onClick={() => navigate('/signup')}
-              className="px-8 py-3.5 rounded-2xl bg-indigo-600 text-white text-[13px] font-bold shadow-xl shadow-indigo-600/20 hover:scale-[1.02] transition-all"
+              className="px-8 py-3.5 rounded-2xl bg-indigo-600 text-white text-[15px] font-bold shadow-xl shadow-indigo-600/20 hover:scale-[1.02] transition-all"
             >
               Get Started
             </button>
@@ -160,9 +160,9 @@ const SmartAttendLanding = () => {
                    </div>
                    
                    <div className="absolute bottom-10 left-10 p-8 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 text-white max-w-sm text-left">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-2">Live Verification</p>
+                      <p className="text-[12px] font-bold uppercase tracking-widest text-indigo-400 mb-2">Live Verification</p>
                       <h3 className="text-2xl font-bold mb-4 tracking-tight">Seamless Security Implementation</h3>
-                      <p className="text-sm text-slate-300">Our neural engine processes thousands of data points to ensure 99.9% identity accuracy.</p>
+                      <p className="text-base text-slate-200">Our neural engine processes thousands of data points to ensure 99.9% identity accuracy.</p>
                    </div>
                 </div>
              </div>
@@ -204,7 +204,7 @@ const SmartAttendLanding = () => {
               </p>
             </div>
             <div className={`hidden lg:block w-px h-24 ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
-            <div className="max-w-xs text-sm text-slate-500 font-medium">
+            <div className="max-w-xs text-base text-slate-500 font-medium leading-relaxed">
               Every detail is optimized for high-traffic campus environments, ensuring zero friction and maximum security.
             </div>
           </div>
@@ -247,7 +247,7 @@ const SmartAttendLanding = () => {
                   {f.icon}
                 </div>
                 <h3 className="text-xl font-bold mb-4 tracking-tight">{f.title}</h3>
-                <p className={`text-sm leading-relaxed font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
+                <p className={`text-base leading-relaxed font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
               </div>
             ))}
           </div>
@@ -299,9 +299,9 @@ const SmartAttendLanding = () => {
                     {item.icon}
                  </div>
                  <div className="space-y-4">
-                    <span className="text-sm font-bold text-indigo-600 tracking-widest uppercase">Step {item.step}</span>
-                    <h3 className="text-xl font-bold tracking-tight">{item.title}</h3>
-                    <p className={`text-sm leading-relaxed font-medium ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                    <span className="text-base font-bold text-indigo-600 tracking-widest uppercase">Step {item.step}</span>
+                    <h3 className="text-2xl font-bold tracking-tight">{item.title}</h3>
+                    <p className={`text-base leading-relaxed font-medium ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                        {item.text}
                     </p>
                  </div>
@@ -331,7 +331,7 @@ const SmartAttendLanding = () => {
                 <Lock size={32} />
               </div>
               <h2 className="text-4xl md:text-6xl font-bold mb-10 tracking-tight leading-[1.1]">Hardened Campus Security.</h2>
-              <p className="text-lg md:text-xl mb-12 leading-relaxed font-medium text-slate-400">
+              <p className="text-xl md:text-2xl mb-12 leading-relaxed font-medium text-slate-400">
                 Protecting institutional data is our priority. Our biometric authentication uses encrypted signatures to ensure identity is never compromised.
               </p>
               <ul className="space-y-6 font-bold">
@@ -371,21 +371,21 @@ const SmartAttendLanding = () => {
                 </div>
                 <span className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>SmartAttend</span>
               </div>
-              <p className={`max-w-md text-sm leading-relaxed mb-10 font-medium mx-auto md:mx-0 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <p className={`max-w-md text-base leading-relaxed mb-10 font-medium mx-auto md:mx-0 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                  State-of-the-art campus monitoring solutions for modern academic institutions.
               </p>
             </div>
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-8 text-indigo-600">Explore</h4>
-              <ul className={`space-y-4 text-sm font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-8 text-indigo-600">Explore</h4>
+              <ul className={`space-y-4 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
                 <li><a href="#stats" className="hover:text-indigo-600 transition-colors">Statistics</a></li>
                 <li><a href="#security" className="hover:text-indigo-600 transition-colors">Security</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold uppercase tracking-widest text-xs mb-8 text-indigo-600">Legal</h4>
-              <ul className={`space-y-4 text-sm font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              <h4 className="font-bold uppercase tracking-widest text-sm mb-8 text-indigo-600">Legal</h4>
+              <ul className={`space-y-4 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Privacy</a></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Terms</a></li>
                 <li><a href="#" className="hover:text-indigo-600 transition-colors">Support</a></li>
