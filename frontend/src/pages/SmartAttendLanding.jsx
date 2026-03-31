@@ -29,7 +29,6 @@ const SmartAttendLanding = () => {
   const navLinks = [
     { name: 'Features', href: '#features' },
     { name: 'Workflow', href: '#workflow' },
-    { name: 'Statistics', href: '#stats' },
     { name: 'Security', href: '#security' },
   ];
 
@@ -105,8 +104,18 @@ const SmartAttendLanding = () => {
       </div>
 
       {/* Hero Section */}
-      <header className="relative pt-64 pb-32 px-8">
+      <header className="relative pt-64 pb-32 px-8 min-h-[90vh] flex items-center">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Professional Background Image Integration */}
+          <div className="absolute inset-0 z-0 overflow-hidden">
+             <img 
+               src="/modern_bg.png" 
+               className={`w-full h-full object-cover opacity-30 ${isDark ? 'mix-blend-overlay grayscale' : 'mix-blend-multiply opacity-[0.08]'}`} 
+               alt="Background Overlay"
+             />
+             <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-b from-[#020617]/95 via-[#020617]/70 to-[#020617]' : 'bg-gradient-to-b from-white/95 via-white/50 to-white'}`}></div>
+          </div>
+          
           <div className={`absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-200/60'}`}></div>
           <div className={`absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-[100px] opacity-10 ${isDark ? 'bg-purple-900/40' : 'bg-purple-200/60'}`}></div>
         </div>
@@ -170,25 +179,7 @@ const SmartAttendLanding = () => {
         </div>
       </header>
 
-      {/* Stats Section - Dashboard Aligned */}
-      <section id="stats" className={`py-40 px-8 relative overflow-hidden`}>
-        <div className={`absolute inset-0 ${isDark ? 'bg-[#020617]' : 'bg-[#f8fafc]'}`}></div>
-        <div className="container mx-auto relative z-10">
-          <div className={`grid grid-cols-2 lg:grid-cols-4 gap-8 p-12 rounded-[40px] border border-white/20 ${isDark ? 'bg-white/5 backdrop-blur-3xl shadow-2xl' : 'bg-white/40 backdrop-blur-2xl shadow-xl shadow-black/5 border-white'}`}>
-            {[
-              { label: 'Campus Integrations', val: '450+' },
-              { label: 'Facial Templates', val: '12M+' },
-              { label: 'Verified Sessions', val: '80K+' },
-              { label: 'System Uptime', val: '99.9%' },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <p className={`text-4xl md:text-5xl font-bold tracking-tighter mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>{s.val}</p>
-                <p className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isDark ? 'text-indigo-500' : 'text-indigo-600'}`}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Stats Section Removed as requested */}
 
       {/* Detailed Features */}
       <section id="features" className="py-40 px-8">
@@ -209,44 +200,59 @@ const SmartAttendLanding = () => {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { 
-                icon: <Camera size={22} />, 
-                title: 'Adaptive Bio-ID', 
-                text: 'Advanced facial mapping that works in low-light and diverse environments.' 
+                icon: <Camera size={26} />, 
+                title: 'Adaptive Biometrics', 
+                text: 'High-precision facial recognition optimized for diverse lighting and environmental conditions.' 
               },
               { 
-                icon: <MapPin size={22} />, 
-                title: 'Geospatial Lock', 
-                text: 'Smart proximity detection that guarantees student presence in-class.' 
+                icon: <MapPin size={26} />, 
+                title: 'Geofencing Precision', 
+                text: 'Smart proximity boundaries ensure students are physically present in designated classroom zones.' 
               },
               { 
-                icon: <LineChart size={22} />, 
-                title: 'Audit-Ready Reports', 
-                text: 'Export detailed analytics for institutional compliance and performance.' 
+                icon: <LineChart size={26} />, 
+                title: 'Institutional Analytics', 
+                text: 'Generate instant compliance-ready reports and identify academic performance trends.' 
               },
               { 
-                icon: <Users size={22} />, 
-                title: 'Multi-Role Portals', 
-                text: 'Optimized experiences for faculty, students, and system owners.' 
+                icon: <Users size={26} />, 
+                title: 'Role-Optimized Portals', 
+                text: 'Tailored dashboard experiences for campus admins, faculty members, and students.' 
               },
               { 
-                icon: <ShieldCheck size={22} />, 
-                title: 'Identity Privacy', 
-                text: 'Decentralized data storage ensures biometric data remains private.' 
+                icon: <ShieldCheck size={26} />, 
+                title: 'Data Integrity Guard', 
+                text: 'Decentralized and encrypted biometric data storage for maximum institutional privacy.' 
               },
               { 
-                icon: <Globe size={22} />, 
-                title: 'Universal Access', 
-                text: 'Synchronized cross-platform performance across all modern hardware.' 
+                icon: <Globe size={26} />, 
+                title: 'Universal Scalability', 
+                text: 'Engineered to support thousands of simultaneous scans across entire university branches.' 
+              },
+              { 
+                icon: <Zap size={26} />, 
+                title: 'Zero-Latency Logic', 
+                text: 'Ultra-fast neural processing ensures millisecond-level identification and logging.' 
+              },
+              { 
+                icon: <Shield size={26} />, 
+                title: 'Spoof Detection', 
+                text: 'Advanced liveness checks protect the system against photos, videos, and digital display attacks.' 
+              },
+              { 
+                icon: <Activity size={26} />, 
+                title: 'Academic Synergy', 
+                text: 'Deep integration between attendance sessions and student final result data sets.' 
               },
             ].map((f) => (
               <div key={f.title} className={`p-10 rounded-[32px] border transition-all duration-500 hover:shadow-2xl hover:bg-white dark:hover:bg-white/5 ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-100 shadow-sm shadow-black/5'}`}>
-                <div className={`h-11 w-11 rounded-xl mb-8 flex items-center justify-center ${isDark ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
+                <div className={`h-14 w-14 rounded-2xl mb-8 flex items-center justify-center ${isDark ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-indigo-50 text-indigo-600 border border-indigo-100'}`}>
                   {f.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-4 tracking-tight">{f.title}</h3>
+                <h3 className="text-2xl font-bold mb-4 tracking-tight">{f.title}</h3>
                 <p className={`text-base leading-relaxed font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
               </div>
             ))}
@@ -379,7 +385,7 @@ const SmartAttendLanding = () => {
               <h4 className="font-bold uppercase tracking-widest text-sm mb-6 text-indigo-600">Explore</h4>
               <ul className={`space-y-3 text-base font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                 <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
-                <li><a href="#stats" className="hover:text-indigo-600 transition-colors">Statistics</a></li>
+                <li><a href="#workflow" className="hover:text-indigo-600 transition-colors">Workflow</a></li>
                 <li><a href="#security" className="hover:text-indigo-600 transition-colors">Security</a></li>
               </ul>
             </div>
