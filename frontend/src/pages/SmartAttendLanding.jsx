@@ -43,32 +43,32 @@ const SmartAttendLanding = () => {
   ];
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-700 font-sans ${isDark ? 'bg-[#020617] text-slate-200' : 'bg-[#f8fafc] text-slate-800'}`}>
+    <div className={`min-h-screen w-full transition-colors duration-700 font-sans neural-mesh ${isDark ? 'bg-[#020617] text-white' : 'bg-[#f8fafc] text-slate-900'}`}>
       
-      {/* Navbar - Subtle Floating */}
-      <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 px-6 pt-4`}>
-        <nav className={`container mx-auto h-16 rounded-2xl transition-all duration-500 border flex items-center justify-between px-6 ${scrolled ? (isDark ? 'bg-[#020617]/80 backdrop-blur-xl border-white/10 shadow-lg' : 'bg-white/80 backdrop-blur-xl border-slate-200 shadow-md') : 'bg-transparent border-transparent'}`}>
-          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-              <Activity size={18} />
+      {/* Navbar - Floating Glass Layer */}
+      <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 pt-4`}>
+        <nav className={`container mx-auto h-20 rounded-[30px] transition-all duration-700 border flex items-center justify-between px-8 ${scrolled ? (isDark ? 'bg-[#020617]/60 backdrop-blur-3xl border-white/10 shadow-2xl' : 'bg-white/70 backdrop-blur-3xl border-white/50 shadow-xl') : 'bg-transparent border-transparent'}`}>
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="h-10 w-10 rounded-2xl bg-brand-primary flex items-center justify-center text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] group-hover:rotate-12 transition-all">
+              <Activity size={22} className="group-hover:animate-pulse" />
             </div>
-            <span className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>SmartAttend</span>
+            <span className={`text-2xl font-black tracking-tighter ${isDark ? 'text-white' : 'text-slate-900'}`}>SmartAttend</span>
           </div>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className={`text-sm font-semibold transition-all hover:text-indigo-600 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              <a key={link.name} href={link.href} className={`text-[15px] font-black uppercase tracking-widest transition-all hover:text-brand-primary ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 {link.name}
               </a>
             ))}
           </div>
 
           <div className="flex items-center gap-4">
-             <button onClick={toggleTheme} className={`p-2 rounded-xl transition-all ${isDark ? 'bg-white/5 hover:bg-white/10 text-indigo-400' : 'bg-white/80 hover:bg-white text-indigo-600 shadow-sm'}`}>
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+             <button onClick={toggleTheme} className={`p-3 rounded-2xl transition-all ${isDark ? 'bg-white/5 hover:bg-white/10 text-indigo-400 border border-white/5' : 'bg-white/80 hover:bg-white text-indigo-600 border border-slate-200 shadow-sm'}`}>
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <button onClick={() => navigate('/login')} className={`hidden md:block px-4 py-2 rounded-xl text-sm font-bold transition-all ${isDark ? 'text-slate-300 hover:bg-white/5' : 'text-slate-600 hover:bg-black/5'}`}>Log In</button>
-            <button onClick={() => navigate('/signup')} className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-md hover:scale-[1.02] transition-all">Get Started</button>
+            <button onClick={() => navigate('/login')} className={`hidden md:block px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest transition-all ${isDark ? 'text-slate-300 hover:bg-white/5' : 'text-slate-600 hover:bg-black/5'}`}>Log In</button>
+            <button onClick={() => navigate('/signup')} className="btn-premium">Get Started</button>
             <button className="lg:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -76,134 +76,150 @@ const SmartAttendLanding = () => {
         </nav>
       </div>
 
-      {/* Hero Section - Subtle and Clean */}
-      <header className="relative pt-48 pb-24 px-8 min-h-[85vh] flex items-center overflow-hidden">
+      {/* Hero Section - High End Aesthetics */}
+      <header className="relative pt-64 pb-32 px-8 min-h-screen flex items-center overflow-hidden">
+        {/* Animated Gradient Orbs Behind Content */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <img src="/modern_bg.png" className={`w-full h-full object-cover opacity-20 ${isDark ? 'grayscale' : 'opacity-[0.05]'}`} alt="Bg" />
-          <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-b from-[#020617]/80 via-transparent to-[#020617]' : 'bg-gradient-to-b from-white/80 via-transparent to-white'}`}></div>
+           <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-brand-primary/10 rounded-full blur-[150px] animate-pulse"></div>
+           <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-brand-secondary/10 rounded-full blur-[150px] animate-pulse delay-700"></div>
+           
+           <img src="/modern_bg.png" className={`w-full h-full object-cover opacity-30 ${isDark ? 'mix-blend-overlay grayscale' : 'mix-blend-multiply opacity-[0.05]'}`} alt="Bg" />
+           <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-b from-[#020617]/80 via-transparent to-[#020617]' : 'bg-gradient-to-b from-[#f8fafc]/80 via-transparent to-[#f8fafc]'}`}></div>
         </div>
 
-        <div className="container mx-auto relative z-10 flex flex-col items-center text-center space-y-8">
-          <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-bold border ${isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'}`}>
-            <Sparkles size={14} className="text-yellow-500" /> Professional AI Attendance
+        <div className="container mx-auto relative z-10 flex flex-col items-center text-center space-y-12">
+          <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.3em] border animate-float shadow-2xl ${isDark ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/20' : 'bg-white text-brand-primary border-brand-primary/10'}`}>
+            <Sparkles size={16} className="text-yellow-500" /> Advanced Recognition System
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-slate-900 dark:text-white max-w-4xl">
-            Modern Biometrics <br />
-            <span className="text-indigo-600">Reimagined for Institutions.</span>
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-slate-900 dark:text-white max-w-5xl">
+            THE <span className="text-gradient">INTELLIGENT</span> <br />
+            VERIFICATION.
           </h1>
           
-          <p className={`text-lg md:text-xl max-w-2xl leading-relaxed font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-            Experience a clean, user-friendly interface for effortless campus identity management and real-time attendance tracking.
+          <p className={`text-xl md:text-2xl max-w-3xl leading-relaxed font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            Institutional-grade biometrics reimagined with a high-performance interface. Unified security for the modern campus.
           </p>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <button onClick={() => navigate('/login')} className="px-8 py-4 rounded-xl bg-indigo-600 text-white font-bold shadow-lg hover:bg-indigo-700 transition-all">Access Dashboard</button>
-            <button onClick={() => navigate('/signup')} className={`px-8 py-4 rounded-xl font-bold border transition-all ${isDark ? 'border-white/10 text-white hover:bg-white/5' : 'border-slate-200 text-slate-900 hover:bg-black/5'}`}>Sign Up Your College</button>
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-10">
+            <button onClick={() => navigate('/login')} className="btn-premium px-12 py-5 text-sm">
+              Access Portal Now <ArrowRight className="inline ml-2" size={20} />
+            </button>
+            <button onClick={() => navigate('/signup')} className={`px-12 py-5 rounded-full font-black uppercase tracking-widest text-xs border-2 transition-all ${isDark ? 'border-white/10 text-white hover:bg-white/5 shadow-2xl shadow-indigo-600/10' : 'border-slate-200 text-slate-900 hover:border-brand-primary shadow-xl shadow-black/5'}`}>
+              Institutional Reg
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Features - User Friendly Grid */}
-      <section id="features" className="py-32 px-8">
+      {/* Features - Premium Bento-ish Layout */}
+      <section id="features" className="py-48 px-8 relative">
         <div className="container mx-auto">
-          <div className="max-w-2xl mb-20">
-             <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">Core Features.</h2>
-             <p className="text-lg text-slate-500 font-medium">Everything you need to manage attendance with simplicity and precision.</p>
+          <div className="max-w-3xl mb-32 flex flex-col md:flex-row items-end gap-8">
+             <div className="flex-1">
+                <span className="text-xs font-black tracking-[0.4em] uppercase text-brand-primary mb-6 block">Capabilities</span>
+                <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]">Core Ecosystem.</h2>
+             </div>
+             <p className="text-xl text-slate-500 font-bold leading-relaxed max-w-xs">Modular precision tools built for the next generation of academic environments.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: <Camera size={26} />, title: 'Adaptive Biometrics', text: 'Fast and accurate facial recognition for all lighting conditions.' },
-              { icon: <MapPin size={26} />, title: 'Geosync Protection', text: 'Ensures students are physically present within classroom bounds.' },
-              { icon: <LineChart size={26} />, title: 'Instant Analytics', text: 'Clean reports and data visualization for teachers and admins.' },
-              { icon: <Users size={26} />, title: 'Multi-Role Panels', text: 'Specific, easy-to-use views for students and faculty.' },
-              { icon: <ShieldCheck size={26} />, title: 'Privacy First', text: 'Secure encryption standards for all institutional data.' },
-              { icon: <Zap size={26} />, title: 'Zero Latency', text: 'Scanning and recording happens in under a second.' },
+              { icon: <Camera size={28} />, title: 'Adaptive Bio-ID', text: 'Fast, secure facial matching that evolves with campus environments.' },
+              { icon: <MapPin size={28} />, title: 'Spatial Protocol', text: 'Geographical restrictions ensure physical presence within designated zones.' },
+              { icon: <LineChart size={28} />, title: 'Unified Data', text: 'Instant visual analytics and audit-ready reports for institutional compliance.' },
+              { icon: <Users size={28} />, title: 'Optimized Experience', text: 'Dedicated, world-class dashboards for both faculty and students.' },
+              { icon: <ShieldCheck size={28} />, title: 'Privacy Shield', text: 'Advanced decentralized encryption guarantees biometric data remains private.' },
+              { icon: <Zap size={28} />, title: 'Instant Execution', text: 'Cloud-native architecture ensures real-time processing under high-load.' },
             ].map((f) => (
-              <div key={f.title} className={`p-8 rounded-2xl border transition-all hover:shadow-md ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-100 shadow-sm'}`}>
-                <div className={`h-12 w-12 rounded-xl mb-6 flex items-center justify-center ${isDark ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-50 text-indigo-600'}`}>
+              <div key={f.title} className="glass-card p-10 rounded-[40px] group hover:-translate-y-2 transition-all duration-500">
+                <div className={`h-16 w-16 rounded-[24px] mb-8 flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg ${isDark ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary/20' : 'bg-indigo-50 text-brand-primary'}`}>
                   {f.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-3">{f.title}</h3>
-                <p className="text-base text-slate-500 leading-relaxed font-medium">{f.text}</p>
+                <h3 className="text-2xl font-black tracking-tighter mb-4">{f.title}</h3>
+                <p className="text-base text-slate-500 leading-relaxed font-bold">{f.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Workflow - Simple Steps */}
-      <section id="workflow" className={`py-32 px-8 ${isDark ? 'bg-white/1' : 'bg-slate-50'}`}>
-        <div className="container mx-auto">
-          <div className="text-center mb-24">
-             <h2 className="text-3xl md:text-5xl font-bold mb-6 tracking-tight">How it Works.</h2>
-             <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto">A seamless 4-step process for students and educators.</p>
+      {/* Workflow - Professional Steps */}
+      <section id="workflow" className={`py-48 px-8 relative overflow-hidden ${isDark ? 'bg-[#020617]' : 'bg-[#fcfdff]'}`}>
+         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-brand-primary/10 hidden lg:block"></div>
+         
+         <div className="container mx-auto">
+          <div className="text-center mb-32">
+             <h2 className="text-5xl md:text-[6rem] font-black tracking-tighter leading-none mb-8">Seamless Sync.</h2>
+             <p className="text-2xl text-slate-500 font-bold max-w-2xl mx-auto">The architecture behind perfect institutional coordination.</p>
           </div>
 
-          <div className="grid lg:grid-cols-4 gap-12">
+          <div className="grid lg:grid-cols-4 gap-24 relative z-10">
              {[
-               { step: '01', title: 'Schedule', text: 'Teachers set class time.' },
-               { step: '02', title: 'Identify', text: 'Students scan their face.' },
-               { step: '03', title: 'Verify', text: 'System confirms identity.' },
-               { step: '04', title: 'Complete', text: 'Attendance is recorded.' },
+               { step: '01', title: 'Schedule', text: 'Faculty configures session parameters.' },
+               { step: '02', title: 'Detect', text: 'System initiates neural scanning protocol.' },
+               { step: '03', title: 'Verify', text: 'Instant biometric & spatial authentication.' },
+               { step: '04', title: 'Compute', text: 'Records synchronized to secure cloud.' },
              ].map((item) => (
-               <div key={item.step} className="text-center">
-                 <div className="w-16 h-16 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xl mx-auto mb-6 shadow-md">
+               <div key={item.step} className="text-center group">
+                 <div className={`w-20 h-20 rounded-[28px] flex items-center justify-center font-black text-2xl mx-auto mb-10 transition-all duration-700 group-hover:rotate-6 shadow-2xl ${isDark ? 'bg-brand-primary text-white' : 'bg-white text-brand-primary border border-slate-100 shadow-indigo-600/10'}`}>
                     {item.step}
                  </div>
-                 <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
-                 <p className="text-base text-slate-500 font-medium">{item.text}</p>
+                 <h3 className="text-3xl font-black tracking-tighter mb-4">{item.title}</h3>
+                 <p className="text-lg text-slate-500 font-bold">{item.text}</p>
                </div>
              ))}
           </div>
         </div>
       </section>
 
-      {/* Security - Trust and Policy */}
-      <section id="security" className={`py-32 px-8 border-t border-b ${isDark ? 'border-white/5 bg-[#020617]' : 'border-slate-200 bg-white'}`}>
+      {/* Security - High Impact Section */}
+      <section id="security" className={`py-48 px-8 border-t border-b ${isDark ? 'bg-[#020617] border-white/5' : 'bg-white border-slate-100 shadow-2xl shadow-indigo-600/5'}`}>
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-32 items-center">
             <div>
-              <div className="h-12 w-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-6 shadow-md shadow-indigo-600/20">
-                <Lock size={24} />
+              <div className="h-16 w-16 rounded-[24px] bg-brand-primary text-white flex items-center justify-center mb-10 shadow-[0_0_30px_rgba(139,92,246,0.5)]">
+                <Lock size={32} />
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-8 tracking-tight">Institutional Security.</h2>
-              <p className="text-lg text-slate-500 mb-10 leading-relaxed font-medium">
-                Protecting student and faculty data is our absolute priority. We use bank-grade encryption to ensure identity stays private.
+              <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-[0.9]">Hardened Security.</h2>
+              <p className="text-xl text-slate-500 mb-12 leading-relaxed font-bold">
+                Identity integrity is our foundation. Our biometric signature system uses multi-layered encryption to protect every data point.
               </p>
-              <div className="space-y-4">
-                {['Bank-grade Encryption', 'Anti-Spoofing Sensors', 'Privacy First Policy'].map(item => (
-                  <div key={item} className="flex items-center gap-3">
-                    <CheckCircle2 className="text-indigo-600" size={20} />
-                    <span className="font-bold text-base">{item}</span>
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 gap-8 font-black text-[11px] uppercase tracking-widest text-slate-500">
+                <div className="flex items-center gap-3"><CheckCircle2 className="text-brand-primary" size={24} /> 256-bit AES</div>
+                <div className="flex items-center gap-3"><CheckCircle2 className="text-brand-primary" size={24} /> Liveness Check</div>
+                <div className="flex items-center gap-3"><CheckCircle2 className="text-brand-primary" size={24} /> End-to-End SSL</div>
+                <div className="flex items-center gap-3"><CheckCircle2 className="text-brand-primary" size={24} /> IP Hardened</div>
               </div>
             </div>
-            <div className={`p-12 rounded-[40px] border flex items-center justify-center ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'}`}>
-                <ShieldCheck size={200} className="text-indigo-600" />
+            <div className="glass-card-elite p-20 rounded-[64px] border-white/5 flex items-center justify-center relative overflow-hidden group">
+                <div className="absolute inset-0 bg-brand-primary/10 blur-[100px] animate-pulse"></div>
+                <ShieldCheck size={260} className="text-brand-primary relative z-10 animate-float transition-transform group-hover:scale-110 duration-1000" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer - Minimalist */}
-      <footer className={`py-12 px-8 ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
-        <div className="container mx-auto border-t border-slate-200 dark:border-white/5 pt-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-             <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-                  <Activity size={18} />
+      {/* Footer - Professional Polish */}
+      <footer className="py-24 px-8 relative">
+        <div className="container mx-auto border-t border-slate-200 dark:border-white/10 pt-20">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+             <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-2xl bg-brand-primary flex items-center justify-center shadow-lg shadow-indigo-600/30">
+                  <Activity className="text-white" size={20} />
                 </div>
-                <span className="text-xl font-bold tracking-tight">SmartAttend</span>
+                <span className="text-2xl font-black tracking-tighter">SmartAttend</span>
              </div>
-             <div className="flex gap-8 text-sm font-bold text-slate-500">
-                <a href="#" className="hover:text-indigo-600">Privacy</a>
-                <a href="#" className="hover:text-indigo-600">Terms</a>
-                <a href="#" className="hover:text-indigo-600">GitHub</a>
+             
+             <div className="flex gap-16 text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">
+                <a href="#" className="hover:text-brand-primary transition-all">Privacy</a>
+                <a href="#" className="hover:text-brand-primary transition-all">Terms</a>
+                <a href="#" className="hover:text-brand-primary transition-all">GitHub</a>
              </div>
-             <p className="text-sm font-medium text-slate-500 italic">© 2026 SmartAttend System.</p>
+
+             <div className="flex flex-col items-end gap-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 italic">© 2026 Institutional Excellence.</p>
+             </div>
           </div>
         </div>
       </footer>
