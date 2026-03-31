@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClassroomsByStudent } from '../../app/features/classroom/classroomThunks';
 import { getMyAttendance } from '../../app/features/attendanceStats/attendanceStatsThunks';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Activity, Clock, ShieldCheck, UserCheck, XCircle, ChevronDown, ChevronUp, LayoutDashboard } from 'lucide-react';
 import { useTheme } from '../../context/ThemeProvider';
 
 // ExpandableSection Component
 const ExpandableSection = ({ title, children, isOpen = false }) => {
   const [expanded, setExpanded] = useState(isOpen);
   const { theme, themeConfig } = useTheme();
-  const currentTheme = themeConfig[theme];
+  const currentTheme = (themeConfig && themeConfig[theme]) ? themeConfig[theme] : (themeConfig?.dark || { background: 'bg-slate-900', text: 'text-white' });
   
   return (
     <div className="mb-4">
@@ -39,7 +40,8 @@ const ExpandableSection = ({ title, children, isOpen = false }) => {
 // Classroom Card Component
 const ClassroomCard = ({ classroom, onClick, isActive, theme }) => {
   const { themeConfig } = useTheme();
-  const currentTheme = themeConfig[theme];
+  const currentTheme = (themeConfig && themeConfig[theme]) ? themeConfig[theme] : (themeConfig?.dark || { background: 'bg-slate-900', text: 'text-white' });
+  
   
   // Calculate attendance percentage if attendance data exists
   const attendancePercentage = classroom.attendanceStats ? 
@@ -104,7 +106,7 @@ const ClassroomCard = ({ classroom, onClick, isActive, theme }) => {
 const AttendanceRecordsTable = ({ records, theme }) => {
   const [showAllRecords, setShowAllRecords] = useState(false);
   const { themeConfig } = useTheme();
-  const currentTheme = themeConfig[theme];
+  const currentTheme = (themeConfig && themeConfig[theme]) ? themeConfig[theme] : (themeConfig?.dark || { background: 'bg-slate-900', text: 'text-white' });
   
   // Limit displayed records if not showing all
   const displayedRecords = showAllRecords ? records : records.slice(0, 10); // Show more records by default
@@ -178,7 +180,7 @@ const AttendanceRecordsTable = ({ records, theme }) => {
                       {
                         record.status === 'session-out' ? 'Class Ended' :
                         record.status === 'ongoing' ? 'In Progress' :
-                        record.status.charAt(0).toUpperCase() + record.status.slice(1).replace('-', ' ')
+                        record.status ? record.status.charAt(0).toUpperCase() + record.status.slice(1).replace('-', ' ') : 'N/A'
                       }
                       </span>
                     </td>
@@ -220,14 +222,15 @@ const AttendanceRecordsTable = ({ records, theme }) => {
 // Progress Chart Component for Attendance
 const AttendanceProgressChart = ({ attendanceData, theme }) => {
   const { themeConfig } = useTheme();
-  const currentTheme = themeConfig[theme];
+  const currentTheme = (themeConfig && themeConfig[theme]) ? themeConfig[theme] : (themeConfig?.dark || { background: 'bg-slate-900', text: 'text-white' });
+  
   
   // Check if attendance data is properly structured
   if (!attendanceData || !attendanceData.records || attendanceData.records.length === 0) {
     return (
       <div className={`${currentTheme.card} p-10 rounded-2xl flex flex-col items-center justify-center h-[28rem] border ${theme === 'dark' ? 'border-[#1E2733]/50' : 'border-gray-100'}`}>
         <div className={`p-4 rounded-full mb-4 ${theme === 'dark' ? 'bg-[#121A22]' : 'bg-gray-50'}`}>
-          <BarChart className={`w-8 h-8 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`} />
+          <Activity className={`w-8 h-8 ${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'}`} />
         </div>
         <p className={`text-lg font-medium tracking-wide ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
           No attendance data available yet.
@@ -286,7 +289,7 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
           </h4>
           <div className="-ml-3 mt-4">
             <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={cumulativeData} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
+              <RechartsLineChart data={cumulativeData} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
                 <defs>
                   <linearGradient id="colorPercentage" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor={theme === 'dark' ? '#506EE5' : '#4F46E5'} stopOpacity={0.3}/>
@@ -322,7 +325,10 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
                   }}
                   itemStyle={{ fontWeight: 600 }}
                   formatter={(value) => [`${value}%`, 'Attendance']}
-                  labelFormatter={(value, entry) => `Day ${value}: ${entry[0]?.payload?.date}`}
+                  labelFormatter={(value, entry) => {
+                    const dateStr = entry?.[0]?.payload?.date ? `: ${entry[0].payload.date}` : '';
+                    return `Day ${value}${dateStr}`;
+                  }}
                 />
                 <Line 
                   type="monotone" 
@@ -332,7 +338,7 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
                   dot={{ fill: theme === 'dark' ? '#0A0E13' : 'white', stroke: theme === 'dark' ? '#506EE5' : '#4F46E5', strokeWidth: 2, r: 4 }}
                   activeDot={{ r: 6, fill: theme === 'dark' ? '#506EE5' : '#4F46E5', stroke: theme === 'dark' ? '#121A22' : 'white', strokeWidth: 2 }}
                 />
-              </LineChart>
+              </RechartsLineChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -344,7 +350,7 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
           </h4>
           <div className="flex-1 flex flex-col items-center justify-center relative">
             <ResponsiveContainer width="100%" height={220}>
-              <PieChart>
+              <RechartsPieChart>
                 <Pie
                   data={pieData}
                   innerRadius={70}
@@ -375,7 +381,7 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
                   iconType="circle"
                   wrapperStyle={{ paddingTop: '20px', fontSize: '13px', fontWeight: 500, color: theme === 'dark' ? '#9CA3AF' : '#6B7280' }}
                 />
-              </PieChart>
+              </RechartsPieChart>
             </ResponsiveContainer>
             
             {/* Center Data Label */}
@@ -411,7 +417,8 @@ const AttendanceProgressChart = ({ attendanceData, theme }) => {
 const StudentAttendancePage = () => {
   const dispatch = useDispatch();
   const { theme, themeConfig } = useTheme();
-  const currentTheme = themeConfig[theme];
+  // Ensure currentTheme is never undefined to prevent crashes
+  const currentTheme = (themeConfig && themeConfig[theme]) ? themeConfig[theme] : (themeConfig?.dark || { background: 'bg-slate-900', text: 'text-white' });
   
   const { user } = useSelector(state => state.auth);
   const studentClassrooms = useSelector(state => state.classrooms.studentClassrooms || []);
@@ -443,87 +450,104 @@ const StudentAttendancePage = () => {
   
   // Process attendance data properly from the Redux store with synthesis
   const processedAttendanceData = React.useMemo(() => {
-    if (!attendanceData || !attendanceData.records || !attendanceData.stats || !selectedClassroom) return null;
-    
-    const records = [...(attendanceData.records || [])];
-    const stats = { ...(attendanceData.stats || {}) };
-    const now = new Date();
-    
-    // Synthesize session history for the audit
-    const classroom = selectedClassroom;
-    if (classroom.classes && classroom.classes.length > 0) {
-      classroom.classes.forEach(clsEntry => {
-        const cls = clsEntry.class;
-        if (!cls || !cls.schedule) return;
+    try {
+      if (!attendanceData || !attendanceData.records || !attendanceData.stats || !selectedClassroom) return null;
+      
+      const rawRecords = attendanceData.records || [];
+      const stats = attendanceData.stats || {};
+      const now = new Date();
+      const classroom = selectedClassroom;
+      
+      // Synthesize session history for the audit
+      const finalRecords = [...rawRecords];
+      
+      if (classroom.classes && Array.isArray(classroom.classes)) {
+        classroom.classes.forEach(clsEntry => {
+          const cls = clsEntry?.class;
+          if (!cls || !cls.schedule) return;
 
-        const { startDate, endDate, startTime, endTime, daysOfWeek } = cls.schedule;
-        const startValidDate = new Date(startDate);
-        const endValidDate = new Date(endDate);
+          const { startDate, endDate, startTime, endTime, daysOfWeek } = cls.schedule;
+          if (!startDate || !endDate || !daysOfWeek || !Array.isArray(daysOfWeek)) return;
+          
+          let currentIter = new Date(startDate);
+          const endValidDate = new Date(endDate);
+
         
-        // Iterate through dates from startDate until now
-        let currentIter = new Date(startValidDate);
-        while (currentIter <= now && currentIter <= endValidDate) {
-          if (daysOfWeek.includes(currentIter.getDay())) {
-            // Found a scheduled session date
-            const dateStr = currentIter.toDateString();
-            
-            // Check if there's already a record for this date
-            const existing = records.find(r => new Date(r.markedAt || r.createdAt).toDateString() === dateStr);
-            
-            const [startH, startM] = startTime.split(':').map(Number);
-            const [endH, endM] = endTime.split(':').map(Number);
-            
-            const sessionStart = new Date(currentIter);
-            sessionStart.setHours(startH, startM, 0, 0);
-            const sessionEnd = new Date(currentIter);
-            sessionEnd.setHours(endH, endM, 0, 0);
+        // Safety guard to prevent infinite loops or huge ranges
+        let iterations = 0;
+        const maxIterations = 500; // Limit to ~1.5 years of daily sessions
 
-            if (!existing) {
-              if (now > sessionEnd) {
-                // Past session, no record -> ABSENT
-                records.push({
-                  status: 'absent',
-                  markedAt: sessionEnd,
-                  markedBy: 'System',
-                  title: cls.title
-                });
-              } else if (now >= sessionStart && now <= sessionEnd) {
-                // Ongoing session, no record yet
-                records.push({
-                  status: 'ongoing',
-                  markedAt: sessionStart,
-                  markedBy: 'Live',
-                  title: cls.title
-                });
+        while (currentIter <= now && currentIter <= endValidDate && iterations < maxIterations) {
+          iterations++;
+          if (daysOfWeek.includes(currentIter.getDay())) {
+            const dateStr = currentIter.toDateString();
+            const existing = rawRecords.find(r => r && new Date(r.markedAt || r.createdAt).toDateString() === dateStr);
+            
+            if (!existing && startTime && endTime && typeof startTime === 'string' && typeof endTime === 'string') {
+              const startParts = startTime.split(':');
+              const endParts = endTime.split(':');
+              
+              if (startParts.length >= 2 && endParts.length >= 2) {
+                const [sH, sM] = startParts.map(Number);
+                const [eH, eM] = endParts.map(Number);
+                
+                const sessionStart = new Date(currentIter);
+                sessionStart.setHours(sH, sM, 0, 0);
+                const sessionEnd = new Date(currentIter);
+                sessionEnd.setHours(eH, eM, 0, 0);
+
+                if (now > sessionEnd) {
+                  finalRecords.push({
+                    _id: `synth-${dateStr}-${cls._id || Math.random()}`,
+                    status: 'absent',
+                    markedAt: sessionEnd,
+                    markedBy: 'System',
+                    course: classroom.course
+                  });
+                } else if (now >= sessionStart && now <= sessionEnd) {
+                  finalRecords.push({
+                    _id: `synth-live-${dateStr}`,
+                    status: 'ongoing',
+                    markedAt: sessionStart,
+                    markedBy: 'Live',
+                    course: classroom.course
+                  });
+                }
               }
-            } else if (now > sessionEnd) {
-              // Present, but also session ended -> tag it as ended if needed (UI handled)
             }
           }
-          // Move to next day
           currentIter.setDate(currentIter.getDate() + 1);
         }
       });
     }
 
-    // Sort records by date descending
-    const finalRecords = records.sort((a, b) => new Date(b.markedAt || b.createdAt) - new Date(a.markedAt || a.createdAt));
+      const sortedRecords = (finalRecords || []).sort((a, b) => {
+        const dateA = new Date(a?.markedAt || a?.createdAt);
+        const dateB = new Date(b?.markedAt || b?.createdAt);
+        return (dateB.getTime() || 0) - (dateA.getTime() || 0);
+      });
+      
+      const totalPossible = sortedRecords.filter(r => r && r.status !== 'ongoing').length;
+      const presentCount = sortedRecords.filter(r => r && (r.status === 'present' || r.status === 'late' || r.status === 'excused')).length;
 
-    // Recalculate stats accurately including synthesized absences
-    const totalPossible = finalRecords.filter(r => r.status !== 'ongoing').length;
-    const presentCount = finalRecords.filter(r => r.status === 'present' || r.status === 'late').length;
-    const updatedStats = {
-      ...stats,
-      totalClasses: totalPossible,
-      absentCount: finalRecords.filter(r => r.status === 'absent').length,
-      attendancePercentage: totalPossible > 0 ? ((presentCount / totalPossible) * 100).toFixed(0) : "0"
-    };
-
+      return {
+        records: sortedRecords,
+        stats: {
+          ...stats,
+          totalSessions: totalPossible,
+          presentCount,
+          absentCount: Math.max(0, totalPossible - presentCount),
+          attendancePercentage: totalPossible > 0 ? ((presentCount / totalPossible) * 100).toFixed(0) : "0"
+        }
+      };
+  } catch (e) {
+    console.error("Synthesis error:", e);
     return {
-      records: finalRecords,
-      stats: updatedStats
+      records: attendanceData?.records || [],
+      stats: attendanceData?.stats || { presentCount: 0, absentCount: 0, attendancePercentage: 0 }
     };
-  }, [attendanceData, selectedClassroom]);
+  }
+}, [attendanceData, selectedClassroom]);
   
   // Store attendance data for each classroom separately
   useEffect(() => {
@@ -542,19 +566,12 @@ const StudentAttendancePage = () => {
     return classroomsAttendanceData[selectedClassroom._id] || processedAttendanceData;
   }, [selectedClassroom, classroomsAttendanceData, processedAttendanceData]);
   
-  if (classroomsLoading) {
-    return (
-      <div className={`${currentTheme.background} min-h-screen p-4 md:p-6 flex items-center justify-center`}>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
-  
   // Calculate attendance percentages for classroom cards
   const classroomsWithStats = React.useMemo(() => {
     if (!Array.isArray(studentClassrooms)) return [];
     
-    return studentClassrooms.map(classroom => {
+    return (studentClassrooms || []).map(classroom => {
+      if (!classroom || !classroom._id) return { _id: Math.random() };
       // Get attendance data specific for this classroom
       const classroomAttendance = classroomsAttendanceData[classroom._id];
       
@@ -580,18 +597,29 @@ const StudentAttendancePage = () => {
   
   // Calculate average attendance across all courses
   const averageAttendance = React.useMemo(() => {
-    const classroomsWithAttendance = classroomsWithStats.filter(c => 
-      c.attendanceStats && c.attendanceStats.attendancePercentage
+    const classroomsWithAttendance = (classroomsWithStats || []).filter(c => 
+      c && c.attendanceStats && c.attendanceStats.attendancePercentage
     );
     
     if (classroomsWithAttendance.length === 0) return 0;
     
     const totalAttendance = classroomsWithAttendance.reduce((sum, classroom) => {
-      return sum + parseFloat(classroom.attendanceStats.attendancePercentage || 0);
+      const percentage = parseFloat(classroom.attendanceStats.attendancePercentage) || 0;
+      return sum + percentage;
     }, 0);
     
-    return Math.round(totalAttendance / classroomsWithAttendance.length);
+    const avg = Math.round(totalAttendance / classroomsWithAttendance.length);
+    return isNaN(avg) ? 0 : avg;
   }, [classroomsWithStats]);
+
+  if (classroomsLoading) {
+    return (
+      <div className={`${currentTheme.background} min-h-screen p-4 md:p-6 flex items-center justify-center`}>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
   
   return (
     <div className={`${currentTheme.background} min-h-screen p-4 md:p-8 font-sans`}>
@@ -616,17 +644,17 @@ const StudentAttendancePage = () => {
               </div>
               
               <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
-                {classroomsWithStats.length > 0 ? (
-                  classroomsWithStats.map((classroom, index) => (
+                {(classroomsWithStats || []).length > 0 ? (
+                  (classroomsWithStats || []).map((classroom, index) => (
                     <div 
-                      key={classroom._id}
+                      key={classroom?._id || index}
                       className="animate-in fade-in slide-in-from-bottom-4"
                       style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
                     >
                       <ClassroomCard 
                         classroom={classroom}
                         onClick={setSelectedClassroom}
-                        isActive={selectedClassroom && selectedClassroom._id === classroom._id}
+                        isActive={selectedClassroom && selectedClassroom._id === classroom?._id}
                         theme={theme}
                       />
                     </div>
@@ -663,13 +691,13 @@ const StudentAttendancePage = () => {
                 
                 <div className="h-[200px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={classroomsWithStats
-                        .filter(classroom => classroom.attendanceStats)
+                    <RechartsBarChart
+                      data={(classroomsWithStats || [])
+                        .filter(classroom => classroom && classroom.attendanceStats)
                         .map(classroom => ({
                           name: classroom.course?.courseCode || "Code",
                           attendance: classroom.attendanceStats ? 
-                            Math.round(parseFloat(classroom.attendanceStats.attendancePercentage)) : 0
+                            Math.round(parseFloat(classroom.attendanceStats.attendancePercentage || 0)) : 0
                         }))}
                       margin={{ top: 10, right: 0, bottom: 0, left: -25 }}
                       barSize={16}
@@ -719,7 +747,7 @@ const StudentAttendancePage = () => {
                           })
                         }
                       </Bar>
-                    </BarChart>
+                    </RechartsBarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
@@ -743,7 +771,7 @@ const StudentAttendancePage = () => {
             ) : (
               <div className={`${currentTheme.card} p-10 rounded-2xl flex flex-col items-center justify-center h-[28rem] border ${theme === 'dark' ? 'border-[#1E2733]/50' : 'border-gray-100'}`}>
                 <div className={`p-6 rounded-full mb-6 ${theme === 'dark' ? 'bg-[#121A22]' : 'bg-gray-50'}`}>
-                  <BarChart className={`w-12 h-12 ${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'}`} />
+                  <Activity className={`w-12 h-12 ${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'}`} />
                 </div>
                 <p className={`text-xl font-semibold tracking-tight ${currentTheme.text} mb-2`}>
                   Select a Classroom

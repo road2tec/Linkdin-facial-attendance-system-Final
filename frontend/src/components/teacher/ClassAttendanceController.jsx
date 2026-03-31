@@ -385,7 +385,7 @@ export default function ClassAttendanceController({ classItem }) {
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === 'status' ? 
               (isDark ? 'border-b-2 border-[#506EE5] text-[#506EE5]' : 'border-b-2 border-blue-500 text-blue-600') : 
-              (isDark ? 'text-white hover:text-[#506EE5]' : 'text-gray-500 hover:text-gray-700')
+              (isDark ? 'border-b-2 border-transparent text-white hover:text-[#506EE5]' : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700')
             }`}
           >
             <div className="flex items-center">
@@ -398,7 +398,7 @@ export default function ClassAttendanceController({ classItem }) {
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === 'manage' ? 
               (isDark ? 'border-b-2 border-[#506EE5] text-[#506EE5]' : 'border-b-2 border-blue-500 text-blue-600') : 
-              (isDark ? 'text-white hover:text-[#506EE5]' : 'text-gray-500 hover:text-gray-700')
+              (isDark ? 'border-b-2 border-transparent text-white hover:text-[#506EE5]' : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700')
             }`}
           >
             <div className="flex items-center">
@@ -411,7 +411,7 @@ export default function ClassAttendanceController({ classItem }) {
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === 'bulk' ? 
               (isDark ? 'border-b-2 border-[#506EE5] text-[#506EE5]' : 'border-b-2 border-blue-500 text-blue-600') : 
-              (isDark ? 'text-white hover:text-[#506EE5]' : 'text-gray-500 hover:text-gray-700')
+              (isDark ? 'border-b-2 border-transparent text-white hover:text-[#506EE5]' : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700')
             }`}
           >
             <div className="flex items-center">

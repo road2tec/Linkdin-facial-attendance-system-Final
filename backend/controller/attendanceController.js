@@ -759,9 +759,12 @@ const getClassAttendance = async (req, res) => {
       };
     });
     
-
-    // Get summary statistics
-    const stats = await Attendance.getClassStats(classId);
+    // Calculate statistics from the complete attendanceData array
+    const stats = attendanceData.reduce((acc, item) => {
+      const status = item.attendance.status;
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, { present: 0, absent: 0, late: 0, excused: 0 });
 
     return res.json({
       success: true,
@@ -776,10 +779,10 @@ const getClassAttendance = async (req, res) => {
         attendance: attendanceData,
         stats: {
           total: classroom.assignedStudents.length,
-          present: stats.present || 0,
-          absent: stats.absent || 0,
-          late: stats.late || 0,
-          excused: stats.excused || 0
+          present: stats.present,
+          absent: stats.absent,
+          late: stats.late,
+          excused: stats.excused
         }
       }
     });
