@@ -32,30 +32,30 @@ const SmartAttendLanding = () => {
     { name: 'Security', href: '#security' },
   ];
 
-  // Helper for mixed color gradients (Lavender to Blue)
-  const premiumGradient = "bg-gradient-to-r from-purple-600 to-blue-600";
-  const softLavenderWash = isDark ? "bg-[#020617]" : "bg-[#f5f3ff]";
+  // Helper for mixed color gradients (Indigo to Violet)
+  const premiumGradient = "bg-gradient-to-r from-indigo-600 to-violet-600";
+  const softLavenderWash = isDark ? "bg-[#020617]" : "bg-[#f8fafc]";
 
   return (
     <div className={`min-h-screen w-full transition-colors duration-700 font-sans neural-mesh ${isDark ? 'bg-[#020617] text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
       
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${isDark ? 'bg-[#020617]/80 backdrop-blur-2xl border-b border-white/5 shadow-2xl' : 'bg-white/80 backdrop-blur-2xl border-b border-slate-200/40 shadow-sm'}`}>
-        <div className="container mx-auto px-8 h-24 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className={`h-12 w-12 rounded-2xl ${premiumGradient} flex items-center justify-center shadow-2xl shadow-purple-500/40 group-hover:rotate-12 transition-transform duration-500`}>
-              <Activity className="text-white animate-pulse" size={24} />
+            <div className={`h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/20 group-hover:rotate-6 transition-all duration-500`}>
+              <Activity className="text-white" size={20} />
             </div>
-            <span className="font-black text-3xl tracking-tighter text-gradient">SmartAttend</span>
+            <span className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'} group-hover:text-indigo-600 transition-colors`}>SmartAttend</span>
           </div>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex items-center gap-12">
+          <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
                 href={link.href} 
-                className={`text-xs font-black uppercase tracking-[0.2em] transition-all hover:tracking-[0.3em] ${isDark ? 'text-slate-500 hover:text-white' : 'text-slate-400 hover:text-purple-600'}`}
+                className={`text-[11px] font-bold uppercase tracking-widest transition-all hover:text-indigo-600 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
               >
                 {link.name}
               </a>
@@ -65,19 +65,19 @@ const SmartAttendLanding = () => {
           <div className="hidden lg:flex items-center gap-6">
             <button 
               onClick={toggleTheme} 
-              className={`p-3 rounded-2xl transition-all ${isDark ? 'bg-white/5 hover:bg-white/10 text-amber-300' : 'bg-slate-100 hover:bg-slate-200 text-purple-600'}`}
+              className={`p-2.5 rounded-xl transition-all ${isDark ? 'bg-white/5 hover:bg-white/10 text-indigo-400' : 'bg-slate-100 hover:bg-slate-200 text-indigo-600'}`}
             >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <button 
               onClick={() => navigate('/login')}
-              className={`px-6 py-2 text-xs font-black uppercase tracking-widest transition-all ${isDark ? 'text-white hover:text-purple-400' : 'text-slate-700 hover:text-purple-600'}`}
+              className={`text-sm font-semibold transition-all ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-indigo-600'}`}
             >
-              Sign In
+              Login
             </button>
             <button 
               onClick={() => navigate('/signup')}
-              className="btn-premium shadow-2xl"
+              className="px-6 py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-xl hover:-translate-y-0.5 transition-all"
             >
               Get Started
             </button>
@@ -121,31 +121,30 @@ const SmartAttendLanding = () => {
         </div>
 
         <div className="container mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-20">
-          <div className="flex-1 text-center lg:text-left space-y-12">
-            <div className={`inline-flex items-center gap-3 px-6 py-2 rounded-full text-[10px] font-black tracking-[0.3em] uppercase border animate-fade-in ${isDark ? 'bg-white/5 text-purple-400 border-white/10' : 'bg-white text-purple-600 border-purple-100 shadow-sm'}`}>
-              <ShieldCheck size={14} className="animate-pulse" /> Modern Face Attendance
+          <div className="flex-1 text-center lg:text-left space-y-10">
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wider uppercase border ${isDark ? 'bg-indigo-500/5 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-100'}`}>
+              <ShieldCheck size={14} /> AI-Powered Attendance Verification
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.95] text-slate-900 dark:text-white">
-              The Future of <br />
-              <span className="text-gradient">Attendance</span> <br />
-              is Biometric.
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] text-slate-900 dark:text-white">
+              Smarter <span className="text-indigo-600 italic font-medium">Authentication</span> <br />
+              for Modern Campus.
             </h1>
             
-            <p className={`text-xl md:text-2xl max-w-2xl leading-relaxed font-bold ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-              No more fake attendance or manual logs. Mark your presence easily with our high-precision face scan system.
+            <p className={`text-lg md:text-xl max-w-xl leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Mark your presence instantly with high-precision biometric face scans. Secure, transparent, and completely automated.
             </p>
             
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-6">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-4">
               <button 
                 onClick={() => navigate('/login')}
-                className="btn-premium group"
+                className="px-8 py-4 rounded-xl bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2"
               >
-                Go to Dashboard <ArrowRight size={18} className="transition-transform group-hover:translate-x-2" />
+                Go to Dashboard <ArrowRight size={18} />
               </button>
               <button 
                 onClick={() => navigate('/signup')} 
-                className="btn-outline-premium"
+                className={`px-8 py-4 rounded-xl font-bold border-2 transition-all ${isDark ? 'border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/5' : 'border-slate-200 text-slate-700 hover:border-indigo-600 hover:text-indigo-600'}`}
               >
                 Create Account
               </button>
@@ -203,16 +202,16 @@ const SmartAttendLanding = () => {
       {/* Statistics Section (Deep Space) */}
       <section id="stats" className={`py-40 px-6 relative z-10 border-t border-b ${isDark ? 'bg-[#020617] border-white/5' : 'bg-brand-light/20 border-purple-100/50'}`}>
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-16 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
             {[
-              { label: 'Verified Campuses', val: '320+' },
-              { label: 'Face Inferences', val: '4.5M+' },
-              { label: 'Active Students', val: '150K+' },
-              { label: 'System Precision', val: '99.9%' },
+              { label: 'Campuses', val: '320+' },
+              { label: 'Face Scans', val: '4.5M+' },
+              { label: 'Active Users', val: '150K+' },
+              { label: 'Accuracy', val: '99.9%' },
             ].map((s) => (
-              <div key={s.label} className="group cursor-default">
-                <p className="text-6xl lg:text-7xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-br from-brand-primary to-brand-secondary tracking-tighter group-hover:scale-110 transition-transform duration-500">{s.val}</p>
-                <p className={`text-[10px] uppercase tracking-[0.3em] font-black ${isDark ? 'text-slate-500 group-hover:text-purple-400' : 'text-slate-400 group-hover:text-brand-primary'} transition-colors duration-500`}>{s.label}</p>
+              <div key={s.label} className="space-y-2">
+                <p className={`text-4xl md:text-5xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>{s.val}</p>
+                <p className={`text-xs uppercase tracking-widest font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -232,45 +231,45 @@ const SmartAttendLanding = () => {
              </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               { 
-                icon: <Camera size={32} className="text-brand-primary" />, 
-                title: 'Face Scan Engine', 
-                text: 'Fast face scan prevents fake attendance and ensures you are accounted for.' 
+                icon: <Camera size={26} className="text-indigo-600" />, 
+                title: 'High-Precision Scan', 
+                text: 'Fast, secure biometric scans eliminate manual entries and prevent spoofing.' 
               },
               { 
-                icon: <MapPin size={32} className="text-brand-secondary" />, 
-                title: 'Location Check', 
-                text: 'Smart tracking confirms you are physically in class when marking attendance.' 
+                icon: <MapPin size={26} className="text-violet-600" />, 
+                title: 'Proximity Check', 
+                text: 'Verified attendance based on precise classroom location logs.' 
               },
               { 
-                icon: <LineChart size={32} className="text-brand-primary" />, 
-                title: 'Easy Reports', 
-                text: 'Generate professional records instantly. No more manual paperwork.' 
+                icon: <LineChart size={26} className="text-indigo-600" />, 
+                title: 'Real-time Analytics', 
+                text: 'Instant reports and trends for student academic progress.' 
               },
               { 
-                icon: <Users size={32} className="text-brand-secondary" />, 
-                title: 'Role Management', 
-                text: 'Custom portals for Administrators, Teachers, and Students with simple navigation.' 
+                icon: <Users size={26} className="text-violet-600" />, 
+                title: 'Role Portals', 
+                text: 'Dedicated dashboards for admins, teachers, and students.' 
               },
               { 
-                icon: <ShieldCheck size={32} className="text-brand-primary" />, 
-                title: 'Security Audits', 
-                text: 'Every log is recorded safely. Protect your institutional data with end-to-end encryption.' 
+                icon: <ShieldCheck size={26} className="text-indigo-600" />, 
+                title: 'Encrytped Security', 
+                text: 'Bank-grade security protocols for all institutional data.' 
               },
               { 
-                icon: <Globe size={32} className="text-brand-secondary" />, 
-                title: 'Anywhere Access', 
-                text: 'Access your portal from any device, anywhere, anytime.' 
+                icon: <Globe size={26} className="text-violet-600" />, 
+                title: 'Cloud Integration', 
+                text: 'Seamless access to records from any device, anywhere.' 
               },
             ].map((f) => (
-              <div key={f.title} className="glass-card-elite p-12 rounded-[48px] group hover:scale-[1.02]">
-                <div className={`h-16 w-16 rounded-2xl mb-8 flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-12 ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white shadow-xl border border-slate-100'}`}>
+              <div key={f.title} className={`p-8 rounded-3xl border transition-all hover:shadow-xl hover:-translate-y-1 ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-white border-slate-100'}`}>
+                <div className={`h-12 w-12 rounded-xl mb-6 flex items-center justify-center ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-50'}`}>
                   {f.icon}
                 </div>
-                <h3 className="text-3xl font-black mb-4 tracking-tighter">{f.title}</h3>
-                <p className={`text-lg leading-relaxed font-semibold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
+                <h3 className="text-xl font-bold mb-3 tracking-tight">{f.title}</h3>
+                <p className={`text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{f.text}</p>
               </div>
             ))}
           </div>
@@ -282,23 +281,23 @@ const SmartAttendLanding = () => {
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-32 items-center">
             <div className="text-white">
-              <div className={`h-20 w-20 rounded-3xl ${premiumGradient} flex items-center justify-center text-white mb-10 shadow-2xl shadow-purple-600/40`}>
-                <Lock size={40} />
+              <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white mb-8 shadow-xl shadow-indigo-600/20`}>
+                <Lock size={32} />
               </div>
-              <h2 className="text-5xl md:text-7xl font-black mb-12 tracking-tight leading-[1.1]">Advanced Campus Security.</h2>
-              <p className="text-xl md:text-2xl mb-16 leading-relaxed text-slate-400 font-medium">
-                Protecting student data is our priority. Our face authentication system uses encrypted neural signatures to ensure identity is never compromised.
+              <h2 className="text-4xl md:text-6xl font-bold mb-10 tracking-tight leading-[1.1]">Hardened Campus Security.</h2>
+              <p className="text-lg md:text-xl mb-12 leading-relaxed font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}">
+                Protecting institutional data is our priority. Our biometric authentication uses encrypted signatures to ensure identity is never compromised.
               </p>
-              <ul className="space-y-8 font-black">
+              <ul className="space-y-6 font-bold">
                 {[
-                  'Secure Data Encryption',
-                  'Enhanced Face Matching',
-                  'Real-time Campus Guard',
-                  'Zero Identity Leakage'
+                  'Bank-grade Data Encryption',
+                  'Frictionless Bio-Matching',
+                  'Secure Campus Integration',
+                  'Identity Privacy Guard'
                 ].map(item => (
-                  <li key={item} className="flex items-center gap-6">
-                    <CheckCircle2 className="text-purple-500 shrink-0" size={32} />
-                    <span className="text-2xl">{item}</span>
+                  <li key={item} className="flex items-center gap-5">
+                    <CheckCircle2 className="text-indigo-500 shrink-0" size={26} />
+                    <span className="text-xl">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -320,30 +319,30 @@ const SmartAttendLanding = () => {
         <div className="container mx-auto text-center md:text-left">
           <div className="grid md:grid-cols-4 gap-20">
             <div className="col-span-2">
-              <div className="flex items-center justify-center md:justify-start gap-3 mb-10">
-                <div className={`h-12 w-12 rounded-xl ${premiumGradient} flex items-center justify-center shadow-lg`}>
-                  <Activity className="text-white" size={26} />
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-8">
+                <div className={`h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20`}>
+                  <Activity className="text-white" size={20} />
                 </div>
-                <span className="font-extrabold text-4xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">SmartAttend</span>
+                <span className={`text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>SmartAttend</span>
               </div>
-              <p className="max-w-md text-slate-400 text-xl leading-relaxed mb-12 font-bold mx-auto md:mx-0">
-                 Leading the way in campus monitoring. We verify thousands of sessions every minute for modern universities.
+              <p className={`max-w-md text-sm leading-relaxed mb-10 font-medium mx-auto md:mx-0 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                 State-of-the-art campus monitoring solutions for modern academic institutions.
               </p>
             </div>
             <div>
-              <h4 className="font-black uppercase tracking-widest text-sm mb-12 text-purple-600">Features</h4>
-              <ul className="space-y-6 text-slate-400 font-black text-lg">
-                <li><a href="#features" className="hover:text-purple-600 transition-colors">Face ID</a></li>
-                <li><a href="#features" className="hover:text-purple-600 transition-colors">Campus Monitoring</a></li>
-                <li><a href="#security" className="hover:text-purple-600 transition-colors">Security Guard</a></li>
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-8 text-indigo-600">Explore</h4>
+              <ul className={`space-y-4 text-sm font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <li><a href="#features" className="hover:text-indigo-600 transition-colors">Features</a></li>
+                <li><a href="#stats" className="hover:text-indigo-600 transition-colors">Statistics</a></li>
+                <li><a href="#security" className="hover:text-indigo-600 transition-colors">Security</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-black uppercase tracking-widest text-sm mb-12 text-purple-600">Legal</h4>
-              <ul className="space-y-6 text-slate-400 font-black text-lg">
-                <li><a href="#" className="hover:text-purple-600 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-purple-600 transition-colors">Terms of Use</a></li>
-                <li><a href="#" className="hover:text-purple-600 transition-colors">Contact Us</a></li>
+              <h4 className="font-bold uppercase tracking-widest text-xs mb-8 text-indigo-600">Legal</h4>
+              <ul className={`space-y-4 text-sm font-semibold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                <li><a href="#" className="hover:text-indigo-600 transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-indigo-600 transition-colors">Terms</a></li>
+                <li><a href="#" className="hover:text-indigo-600 transition-colors">Support</a></li>
               </ul>
             </div>
           </div>
