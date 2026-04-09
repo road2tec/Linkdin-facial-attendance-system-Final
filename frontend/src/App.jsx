@@ -41,7 +41,7 @@ import CaptureImage from './pages/CaptureImage';
 import DepartmentManagementPage from "./pages/admin/DepartmentManagementPage";
 import AdminLogsPage from "./pages/admin/AdminLogsPage";
 import AdminResultsPage from "./pages/admin/AdminResultsPage";
-import LiveMonitoringPage from "./pages/admin/LiveMonitoringPage";
+
 import TeacherLayout from './pages/teacher/TeacherLayout'
 import ClassroomsPage from "./pages/teacher/ClassroomsPage";
 import StudentCoursesPage from "./pages/student/StudentCourses";
@@ -131,7 +131,7 @@ function App() {
         <Route path="manageCourses" element={<CourseManagement />} />
         <Route path="manageGroups" element={<GroupsManagementPage/>} />
         <Route path="manageAttendance" element={<AttendanceDashboard/>}></Route>
-        <Route path="live-monitoring" element={<LiveMonitoringPage />}></Route>
+
         <Route path="logs" element={<AdminLogsPage />}></Route>
         <Route path="results" element={<AdminResultsPage />}></Route>
         <Route path="adminSettings" element={<AdminSettings/>}></Route>

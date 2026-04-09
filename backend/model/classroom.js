@@ -119,7 +119,10 @@ const ClassroomSchema = new Schema({
 
 // Check if attendance window is open for a specific class
 ClassroomSchema.methods.isAttendanceWindowOpen = function(classId, classObj = null) {
-  const classEntry = this.classes.find(c => c.class._id.toString() === classId.toString());
+  const classEntry = this.classes.find(c => {
+    const cid = c.class._id ? c.class._id : c.class;
+    return cid.toString() === classId.toString();
+  });
   
   if (!classEntry || !classEntry.attendanceWindow || !classEntry.attendanceWindow.isOpen) return false;
 

@@ -257,7 +257,6 @@ const attendanceSlice = createSlice({
       })
       .addCase(getClassAttendance.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
         state.classAttendance = action.payload.data;
         console.log(action.payload.data);
       })
@@ -300,7 +299,6 @@ const attendanceSlice = createSlice({
       })
       .addCase(getStudentAttendance.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
         state.studentAttendance = action.payload.data;
       })
       .addCase(getStudentAttendance.rejected, (state, action) => {
@@ -318,7 +316,6 @@ const attendanceSlice = createSlice({
       })
       .addCase(getAttendanceWindowStatus.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
         state.attendanceWindow = {
           isOpen: action.payload.data.isOpen,
           openedAt: action.payload.data.isOpen ? action.payload.data.windowDetails.openedAt : null,

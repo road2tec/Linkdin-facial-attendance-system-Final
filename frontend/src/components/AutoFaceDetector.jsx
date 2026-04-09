@@ -26,7 +26,7 @@ const AutoFaceDetector = ({ onEmbeddingGenerated, autoCapture = true, colors }) 
   // Track consecutive frames with face
   const faceDetectionCountRef = useRef(0);
   const detectionIntervalRef = useRef(null);
-  const MIN_FACE_FRAMES = 10; // Required consecutive frames with face
+  const MIN_FACE_FRAMES = 5; // Reduced from 10 for faster response
   const videoReadyRef = useRef(false);
   const lastDetectionRef = useRef(null); // Store the last good detection
 
@@ -47,7 +47,7 @@ const AutoFaceDetector = ({ onEmbeddingGenerated, autoCapture = true, colors }) 
         setLoading(true);
         console.log("Loading face detection models...");
         await Promise.all([
-          faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
           faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
           faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
         ]);
@@ -224,7 +224,7 @@ const AutoFaceDetector = ({ onEmbeddingGenerated, autoCapture = true, colors }) 
           
           // Ensure video is a valid input for face-api.js
           const detections = await faceapi
-            .detectAllFaces(videoRef.current, new faceapi.SsdMobilenetv1Options())
+            .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions({ inputSize: 160, scoreThreshold: 0.5 }))
             .withFaceLandmarks();
           
           if (!canvasRef.current) return;
@@ -333,7 +333,7 @@ const AutoFaceDetector = ({ onEmbeddingGenerated, autoCapture = true, colors }) 
       // Get face descriptors (embeddings)
       console.log("Extracting face descriptors");
       const fullFaceDescriptions = await faceapi
-        .detectAllFaces(tempCanvas, new faceapi.SsdMobilenetv1Options())
+        .detectAllFaces(tempCanvas, new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 }))
         .withFaceLandmarks()
         .withFaceDescriptors();
       

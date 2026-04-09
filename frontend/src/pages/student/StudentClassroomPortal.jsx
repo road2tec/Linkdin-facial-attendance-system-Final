@@ -156,7 +156,7 @@ const StudentClassroomPortal = () => {
                   <p className={`text-sm font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} mb-1`}>Enrolled Classes</p>
                   <div className="flex items-baseline gap-2">
                     <h3 className={`text-4xl font-extrabold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      {classrooms?.data?.length || 0}
+                      {classrooms?.length || 0}
                     </h3>
                   </div>
                 </div>
@@ -169,7 +169,7 @@ const StudentClassroomPortal = () => {
                   <p className={`text-sm font-semibold uppercase tracking-wider ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} mb-1`}>Active Today</p>
                   <div className="flex items-baseline gap-2">
                     <h3 className={`text-4xl font-extrabold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                      {classrooms?.data?.filter(c => c.isActive)?.length || 0}
+                      {classrooms?.filter(c => c.isActive)?.length || 0}
                     </h3>
                   </div>
                 </div>
@@ -190,7 +190,7 @@ const StudentClassroomPortal = () => {
             </div>
             
             <ClassroomList 
-              classrooms={classrooms?.data || []}
+              classrooms={classrooms || []}
               selectedClassroom={selectedClassroom}
               onSelectClassroom={handleClassroomSelection}
               currentTheme={currentTheme}

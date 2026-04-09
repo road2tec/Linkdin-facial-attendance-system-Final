@@ -61,7 +61,7 @@ const Sidebar = ({collapsed: externalCollapsed, setCollapsed: setExternalCollaps
       { id: "courses", label: "Courses", icon: <BookOpen size={20} />, link: "/admin/manageCourses" },
       { id: "groups", label: "Groups", icon: <Users size={20} />, link: "/admin/manageGroups" },
       { id: "attendance", label: "Attendance", icon: <ClipboardList size={20} />, link: "/admin/manageAttendance" },
-      { id: "live", label: "Live Monitoring", icon: <Activity size={20} />, link: "/admin/live-monitoring" },
+
       { id: "results", label: "Results", icon: <BarChart size={20} />, link: "/admin/results" },
       { id: "logs", label: "Security Logs", icon: <ShieldAlert size={20} />, link: "/admin/logs" },
     ]

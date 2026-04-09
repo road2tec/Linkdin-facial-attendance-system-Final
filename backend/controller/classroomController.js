@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Classroom = require('../model/classroom');
 const User = require('../model/user');
 const Group = require('../model/groups');
@@ -181,6 +182,7 @@ const classroomController = {
   getClassroomsByTeacher: async (req, res) => {
     try {
       const { teacherId } = req.params;
+      console.log(`[Dashboard] Fetching classrooms for teacher: ${teacherId}`);
       
       let classrooms = await Classroom.find({ assignedTeacher: teacherId })
         .populate('assignedStudents', 'firstName lastName email rollNumber status')
@@ -195,19 +197,26 @@ const classroomController = {
           }
         })
         .populate('course', 'courseName courseCode title code')
+        .populate({
+          path: 'classes.class',
+          model: 'Class'
+        })
         .populate('sharedResources', 'title files uploadedBy')
         .sort({ createdAt: -1 });
 
       // Fallback: If assignedStudents is empty but Group has students, use those
       const processedClassrooms = classrooms.map(cls => {
         const clsObj = cls.toObject();
+        // If assignedStudents is empty, try to populate from group students
         if ((!clsObj.assignedStudents || clsObj.assignedStudents.length === 0) && 
-            clsObj.group && clsObj.group.students && clsObj.group.students.length > 0) {
+            clsObj.group && Array.isArray(clsObj.group.students)) {
+          console.log(`[Dashboard] Merging group students for classroom: ${clsObj._id}`);
           clsObj.assignedStudents = clsObj.group.students;
         }
         return clsObj;
       });
-
+      
+      console.log(`[Dashboard] Found ${processedClassrooms.length} classrooms for teacher.`);
       return res.status(200).json(processedClassrooms);
     } catch (error) {
       console.error('Error getting classrooms by teacher:', error);
@@ -216,37 +225,80 @@ const classroomController = {
   },
   getClassroomsByStudent : async (req, res) => {
     try {
-      const studentId =  req.user?.userId; // or use req.user._id if protected route
-  
-      const classrooms = await Classroom.find({ assignedStudents: studentId })
-      .populate('department')
-      .populate('assignedTeacher', 'firstName lastName email')
-      .populate({
-        path: 'group',
-        populate: {
-          path: 'mentor',
-          select: 'firstName lastName email'
-        }
-      })
-      .populate('course')
-      .populate({
-        path: 'classes.class',
-        select: 'title course classroom department teacher location isExtraClass schedule'
-      })
-      .populate({
-        path: 'sharedResources',
-        populate: {
-          path: 'uploadedBy',
-          select: 'firstName lastName'
-        }
-      })
-      .populate('announcements.postedBy', 'firstName lastName');
+      const mongoose = require('mongoose');
+      const studentId = req.params.studentId || req.user?.userId;
+      
+      console.log('[DEBUG] getClassroomsByStudent called for student:', studentId);
+      
+      if (!studentId || !mongoose.Types.ObjectId.isValid(studentId)) {
+        return res.status(400).json({ success: false, message: 'Invalid or missing Student ID' });
+      }
 
-      console.log(classrooms)
-      res.status(200).json({ success: true, data: classrooms });
+      // Fetch student with group populated to be sure
+      const student = await User.findById(studentId).populate('group');
+      if (!student) {
+        return res.status(404).json({ success: false, message: 'Student document not found' });
+      }
+
+      const roleIsCorrect = student.role?.toLowerCase() === 'student';
+      if (!roleIsCorrect) {
+        console.warn(`[Dashboard Warning] User ${studentId} is NOT a student (Role: ${student.role}). Data may be empty.`);
+      }
+
+      const groupId = student.group?._id || student.group;
+      console.log(`[Dashboard] Aggregating classrooms. Student: ${student.firstName}, Group: ${groupId}, Role: ${student.role}`);
+
+      // 🔍 ROBUST OR-QUERY
+      const query = {
+        $or: [
+          { assignedStudents: studentId }
+        ]
+      };
+
+      if (groupId && mongoose.Types.ObjectId.isValid(groupId)) {
+        query.$or.push({ group: groupId });
+        
+        // Push-sync student into any classrooms of their group they might be missing from
+        try {
+          await Classroom.updateMany(
+            { group: groupId, assignedStudents: { $ne: studentId } },
+            { $addToSet: { assignedStudents: studentId } }
+          );
+        } catch (syncErr) {
+          console.error('[Sync Error]', syncErr);
+        }
+      }
+  
+      console.log(`[Dashboard] Final query for Punam:`, JSON.stringify(query, null, 2));
+      const classrooms = await Classroom.find(query)
+        .populate('department')
+        .populate('assignedTeacher', 'firstName lastName email')
+        .populate({
+          path: 'group',
+          populate: {
+            path: 'mentor',
+            select: 'firstName lastName email'
+          }
+        })
+        .populate('course')
+        .populate({
+          path: 'classes.class',
+          model: 'Class'
+        })
+        .populate({
+          path: 'sharedResources',
+          populate: {
+            path: 'uploadedBy',
+            select: 'firstName lastName'
+          }
+        })
+        .populate('announcements.postedBy', 'firstName lastName');
+
+      console.log(`[Dashboard Success] Returning ${classrooms.length} classrooms for student ${student.firstName}.`);
+      return res.status(200).json(classrooms);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Server Error' });
+      console.error('[Dashboard Critical Error]', error);
+      res.status(500).json({ success: false, message: 'Server Error during classroom fetch', error: error.message });
     }
   },
 

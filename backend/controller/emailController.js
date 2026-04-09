@@ -14,8 +14,11 @@ const getDateRange = (range) => {
       startDate.setDate(endDate.getDate() - 90);
       break;
     case '180d':
-    default:
       startDate.setDate(endDate.getDate() - 180);
+      break;
+    case '30d':
+    default:
+      startDate.setDate(endDate.getDate() - 30);
       break;
   }
 
@@ -102,7 +105,7 @@ const emailController = {
         return res.status(400).json({ message: 'SMTP is not configured on the server.' });
       }
 
-      const { studentId, recipientEmail, range = '180d' } = req.body;
+      const { studentId, recipientEmail, range = '30d' } = req.body;
 
       if (!studentId || !recipientEmail) {
         return res.status(400).json({ message: 'studentId and recipientEmail are required.' });
@@ -115,7 +118,7 @@ const emailController = {
 
       const { startDate, endDate } = getDateRange(range);
       const stats = await buildStudentStats(studentId, { $gte: startDate, $lte: endDate });
-      const rangeLabel = range === '30d' ? '30-day' : range === '90d' ? '90-day' : '6-month';
+      const rangeLabel = range === '30d' ? '30-day' : range === '90d' ? '90-day' : range === '180d' ? '6-month' : '1-month';
       const { html, text } = buildAttendanceEmail({ student, stats, rangeLabel });
 
       await sendMail({
@@ -150,7 +153,7 @@ const emailController = {
         return res.status(400).json({ message: 'SMTP is not configured on the server.' });
       }
 
-      const { studentId, range = '180d' } = req.body;
+      const { studentId, range = '30d' } = req.body;
       if (!studentId) {
         return res.status(400).json({ message: 'studentId is required.' });
       }
@@ -168,7 +171,7 @@ const emailController = {
 
       const { startDate, endDate } = getDateRange(range);
       const stats = await buildStudentStats(studentId, { $gte: startDate, $lte: endDate });
-      const rangeLabel = range === '30d' ? '30-day' : range === '90d' ? '90-day' : '6-month';
+      const rangeLabel = range === '30d' ? '30-day' : range === '90d' ? '90-day' : range === '180d' ? '6-month' : '1-month';
       const { html, text } = buildAttendanceEmail({ student, stats, rangeLabel });
 
       await sendMail({
@@ -190,15 +193,15 @@ const emailController = {
   },
 
   // NEW: Bulk sends 6-month reports to all parents of students with < 75% attendance
-  sendBulk6MonthReports: async (req, res) => {
+  sendBulkMonthlyReports: async (req, res) => {
     try {
       if (!isMailerConfigured()) {
         return res.status(400).json({ message: 'SMTP is not configured on the server.' });
       }
 
-      const { threshold = 75, range = '180d' } = req.body;
+      const { threshold = 75, range = '30d' } = req.body;
       const { startDate, endDate } = getDateRange(range);
-      const rangeLabel = '6-month';
+      const rangeLabel = range === '30d' ? '30-day' : 'Monthly';
 
       // 1. Get all active parents
       const parents = await User.find({ role: 'parent', status: 'active' }).populate('linkedStudent');

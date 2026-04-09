@@ -1,8 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 const connectDB = require('./utils/db');
-require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
@@ -56,6 +57,9 @@ io.on('connection', (socket) => {
 // Make io accessible to our routes
 app.set('socketio', io);
 
+
+// Static Files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(express.json());

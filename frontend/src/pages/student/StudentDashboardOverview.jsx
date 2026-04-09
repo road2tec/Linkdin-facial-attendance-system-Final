@@ -31,6 +31,10 @@ const StudentDashboardOverview = () => {
   const studentClassrooms = useSelector(state => state.classrooms.studentClassrooms || []);
   const classroomsLoading = useSelector(state => state.classrooms.isLoading);
   const { studentResults } = useSelector(state => state.results || {});
+  
+  console.log('[DEBUG] Student Classrooms:', studentClassrooms);
+  console.log('[DEBUG] User ID:', user?._id);
+  console.log('[DEBUG] Loading:', classroomsLoading);
 
   // Local State
   const [greeting, setGreeting] = useState('');
@@ -69,9 +73,38 @@ const StudentDashboardOverview = () => {
   const upcomingClasses = useMemo(() => {
     if (!studentClassrooms || studentClassrooms.length === 0) return [];
     
-    let sessions = [];
+    const sessions = [];
     const today = new Date();
     
+    // Helper to parse time strings (handles both 24h and 12h formats)
+    const parseTime = (timeStr, baseDate) => {
+       const date = new Date(baseDate);
+       let hours, minutes;
+       
+       if (timeStr.toLowerCase().includes('am') || timeStr.toLowerCase().includes('pm')) {
+          // 12-hour format: "09:40 PM"
+          const splitParts = timeStr.split(' ');
+          const timePart = splitParts[0];
+          const modifier = splitParts[splitParts.length - 1];
+          
+          let [h, m] = timePart.split(':');
+          hours = parseInt(h);
+          minutes = parseInt(m);
+          
+          if (modifier.toLowerCase() === 'pm' && hours < 12) hours += 12;
+          if (modifier.toLowerCase() === 'am' && hours === 12) hours = 0;
+       } else {
+          // 24-hour format: "21:40"
+          let [h, m] = timeStr.split(':');
+          hours = parseInt(h);
+          minutes = parseInt(m);
+       }
+       date.setHours(hours, minutes, 0, 0);
+       return date;
+    };
+
+    console.log(`[Dashboard] Processing ${studentClassrooms.length} classrooms for schedule.`);
+
     studentClassrooms.forEach(classroom => {
       if (classroom.classes && classroom.classes.length > 0) {
         classroom.classes.forEach(clsEntry => {
@@ -83,27 +116,22 @@ const StudentDashboardOverview = () => {
             const checkDate = new Date(today);
             checkDate.setDate(today.getDate() + i);
             
-            if (cls.schedule.daysOfWeek.includes(checkDate.getDay())) {
-              const [hours, minutes] = cls.schedule.startTime.split(':');
-              const sessionDate = new Date(checkDate);
-              sessionDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                const [endHours, endMinutes] = cls.schedule.endTime.split(':');
-                const sessionEndDate = new Date(checkDate);
-                sessionEndDate.setHours(parseInt(endHours), parseInt(endMinutes), 0, 0);
+            if (cls.schedule.daysOfWeek?.includes(checkDate.getDay())) {
+                 const sessionDate = parseTime(cls.schedule.startTime, checkDate);
+                 const sessionEndDate = parseTime(cls.schedule.endTime, checkDate);
 
                 if (sessionDate >= today || (today >= sessionDate && today <= sessionEndDate)) {
                   sessions.push({
                     id: cls._id,
                     courseName: cls.title,
-                    courseCode: classroom.course?.courseCode,
+                    courseCode: classroom.course?.courseCode || classroom.course?.code,
                     teacher: classroom.assignedTeacher ? (classroom.assignedTeacher.firstName + ' ' + classroom.assignedTeacher.lastName) : 'Faculty',
                     time: cls.schedule.startTime + ' - ' + cls.schedule.endTime,
                     date: sessionDate,
                     dateFormatted: sessionDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
                     attendanceOpen: (clsEntry.attendanceWindow?.isOpen || (today >= sessionDate && today <= sessionEndDate)) || false
                   });
-                  break; // Just take the next one for this specific class
+                  break; 
                 }
             }
           }
@@ -184,20 +212,33 @@ const StudentDashboardOverview = () => {
     
     let active = [];
     const now = new Date();
+
+    // Helper to parse time strings (handles both 24h and 12h formats)
+    const parseTime = (timeStr, baseDate) => {
+        const date = new Date(baseDate);
+        let hours, minutes;
+        if (timeStr.toLowerCase().includes('am') || timeStr.toLowerCase().includes('pm')) {
+           const [time, modifier] = timeStr.split(' ');
+           [hours, minutes] = time.split(':');
+           hours = parseInt(hours);
+           if (modifier.toLowerCase() === 'pm' && hours < 12) hours += 12;
+           if (modifier.toLowerCase() === 'am' && hours === 12) hours = 0;
+        } else {
+           [hours, minutes] = timeStr.split(':');
+           hours = parseInt(hours);
+        }
+        date.setHours(hours, parseInt(minutes), 0, 0);
+        return date;
+    };
+
     studentClassrooms.forEach(classroom => {
       if (classroom.classes && classroom.classes.length > 0) {
         classroom.classes.forEach(clsEntry => {
           const cls = clsEntry.class;
           if (!cls || !cls.schedule) return;
           
-          const [startHours, startMinutes] = cls.schedule.startTime.split(':');
-          const [endHours, endMinutes] = cls.schedule.endTime.split(':');
-          
-          const startTime = new Date(now);
-          startTime.setHours(parseInt(startHours), parseInt(startMinutes), 0, 0);
-          
-          const endTime = new Date(now);
-          endTime.setHours(parseInt(endHours), parseInt(endMinutes), 0, 0);
+          const startTime = parseTime(cls.schedule.startTime, now);
+          const endTime = parseTime(cls.schedule.endTime, now);
 
           // Hard lock: Attendance is only valid during the scheduled window (plus 1 min buffer)
           const isTimeValid = now <= new Date(endTime.getTime() + 60000); 

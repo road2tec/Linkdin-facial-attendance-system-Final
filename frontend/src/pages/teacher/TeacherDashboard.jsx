@@ -87,18 +87,6 @@ const TeacherDashboard = () => {
     }
   }, [dispatch, user?._id]);
 
-  useEffect(() => {
-    if (teacherClassrooms) {
-      const totalStudents = teacherClassrooms.reduce((acc, c) => acc + (c.assignedStudents?.length || 0), 0);
-      setDashboardStats(prev => ({
-        ...prev,
-        todayClasses: todayClasses.length,
-        totalStudents,
-        totalGroups: userGroups?.length || 0
-      }));
-    }
-  }, [teacherClassrooms, todayClasses, userGroups]);
-
   const activeSessions = React.useMemo(() => {
     if (!teacherClassrooms) return [];
     const now = new Date();
@@ -128,7 +116,8 @@ const TeacherDashboard = () => {
                 course: classroom.course?.courseName,
                 group: classroom.group?.name,
                 time: `${startStr} - ${endStr}`,
-                isOpen: clsEntry.attendanceWindow?.isOpen
+                isOpen: clsEntry.attendanceWindow?.isOpen,
+                studentCount: classroom.assignedStudents?.length || 0
               });
             }
           }
@@ -138,10 +127,39 @@ const TeacherDashboard = () => {
     return active;
   }, [teacherClassrooms]);
 
+  useEffect(() => {
+    if (teacherClassrooms && teacherClassrooms.length > 0) {
+      // Calculate total unique students across all classrooms
+      const totalStudents = teacherClassrooms.reduce((acc, c) => acc + (c.assignedStudents?.length || 0), 0);
+      
+      // Calculate active groups (handle both array and object structures)
+      let groupsCount = 0;
+      if (Array.isArray(userGroups)) {
+        groupsCount = userGroups.length;
+      } else if (userGroups && typeof userGroups === 'object') {
+        groupsCount = Object.values(userGroups).flat().length;
+      }
+
+      // If groupsCount is still 0, try to derive it from classrooms
+      if (groupsCount === 0 && teacherClassrooms.length > 0) {
+        const uniqueGroups = new Set(teacherClassrooms.map(c => c.group?._id || c.group).filter(Boolean));
+        groupsCount = uniqueGroups.size;
+      }
+
+      setDashboardStats(prev => ({
+        ...prev,
+        todayClasses: todayClasses.length,
+        totalStudents,
+        totalGroups: groupsCount,
+        activeStudents: activeSessions.reduce((acc, s) => acc + (s.studentCount || 0), 0)
+      }));
+    }
+  }, [teacherClassrooms, todayClasses, userGroups, activeSessions]);
+
   const statsCards = [
-    { title: "Active Sessions", value: activeSessions.length, icon: <Calendar size={22} />, color: "bg-blue-500/10 text-blue-400" },
-    { title: "Managed Groups", value: userGroups?.length || 0, icon: <Grid size={22} />, color: "bg-emerald-500/10 text-emerald-400" },
-    { title: "Live Audience", value: dashboardStats.activeStudents, icon: <Users size={22} />, color: "bg-brand-primary/10 text-brand-light" },
+    { title: "Active Sessions", value: todayClasses.length, icon: <Calendar size={22} />, color: "bg-blue-500/10 text-blue-400" },
+    { title: "Managed Groups", value: dashboardStats.totalGroups, icon: <Grid size={22} />, color: "bg-emerald-500/10 text-emerald-400" },
+    { title: "Live Audience", value: dashboardStats.totalStudents, icon: <Users size={22} />, color: "bg-brand-primary/10 text-brand-light" },
     { title: "Pulse Check", value: "94%", icon: <Activity size={22} />, color: "bg-brand-secondary/10 text-brand-secondary" }
   ];
 

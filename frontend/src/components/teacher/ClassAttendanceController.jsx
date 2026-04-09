@@ -126,32 +126,20 @@ export default function ClassAttendanceController({ classItem }) {
 
   // Handle success/error notifications
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && message) {
       setNotification({
         show: true,
         type: 'success',
-        message: message || 'Operation successful'
+        message: message
       });
       
-      // Refresh data after successful operations
-      if (classItem?._id) {
-        dispatch(getAttendanceWindowStatus(classItem._id));
-        dispatch(getClassAttendance(classItem._id));
-      }
-      
-      // Reset selection after bulk action
-      if (selectedStudents.length > 0) {
-        setSelectedStudents([]);
-      }
-      
-      // Reset form state
-      setNotes('');
-      
-      // Clear notification after 3 seconds
-      setTimeout(() => {
+      // Clear notification and reset status after 3 seconds
+      const timer = setTimeout(() => {
         setNotification({ show: false, type: '', message: '' });
         dispatch(resetStatus());
       }, 3000);
+
+      return () => clearTimeout(timer);
     }
     
     if (isError) {
@@ -161,13 +149,14 @@ export default function ClassAttendanceController({ classItem }) {
         message: message || 'An error occurred'
       });
       
-      // Clear notification after 3 seconds
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setNotification({ show: false, type: '', message: '' });
         dispatch(resetStatus());
       }, 3000);
+
+      return () => clearTimeout(timer);
     }
-  }, [isSuccess, isError, message, dispatch, classItem]);
+  }, [isSuccess, isError, message, dispatch]);
 
   // Toggle student selection for bulk actions
   const toggleSelectStudent = (studentId) => {
@@ -194,12 +183,18 @@ export default function ClassAttendanceController({ classItem }) {
     dispatch(openAttendanceWindow({
       classId: classItem._id,
       duration: attendanceDuration
-    }));
+    })).unwrap().then(() => {
+      dispatch(getAttendanceWindowStatus(classItem._id));
+      dispatch(getClassAttendance(classItem._id));
+    });
   };
 
   // Handle closing attendance window
   const handleCloseAttendanceWindow = () => {
-    dispatch(closeAttendanceWindow(classItem._id));
+    dispatch(closeAttendanceWindow(classItem._id)).unwrap().then(() => {
+      dispatch(getAttendanceWindowStatus(classItem._id));
+      dispatch(getClassAttendance(classItem._id));
+    });
   };
 
   // Handle marking attendance manually for a single student
@@ -209,7 +204,9 @@ export default function ClassAttendanceController({ classItem }) {
       studentId,
       status,
       notes
-    }));
+    })).unwrap().then(() => {
+      dispatch(getClassAttendance(classItem._id));
+    });
   };
 
   // Handle bulk marking attendance
@@ -233,7 +230,11 @@ export default function ClassAttendanceController({ classItem }) {
     dispatch(bulkMarkAttendance({
       classId: classItem._id,
       attendanceData
-    }));
+    })).unwrap().then(() => {
+      dispatch(getClassAttendance(classItem._id));
+      setSelectedStudents([]);
+      setNotes('');
+    });
   };
 
   // Get status badge color based on theme and status

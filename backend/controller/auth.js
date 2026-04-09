@@ -189,7 +189,7 @@ const signup = async (req, res) => {
                 employeeId,
                 dateOfBirth: dateOfBirth || undefined,
                 gender: gender ? gender.toLowerCase() : undefined,  
-                profileImage: req.file ? req.file.path : null,
+                profileImage: req.file ? (req.file.path.startsWith('http') ? req.file.path : `/uploads/${req.file.filename}`) : null,
                 status: role && role.toLowerCase() === 'teacher' ? 'pending' : 'active',
                 linkedStudent: linkedStudentId || undefined,
             });

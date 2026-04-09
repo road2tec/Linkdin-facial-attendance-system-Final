@@ -183,16 +183,23 @@ const checkLocationValidity = async (req, res) => {
         });
       }
       const now = new Date();
+      // Determine status based on time
+      const [hours, minutes] = classObj.schedule.startTime.split(':').map(Number);
+      const classStartTime = new Date(now);
+      classStartTime.setHours(hours, minutes, 0, 0);
+      const lateThresholdMs = 15 * 60 * 1000;
+      const status = now > new Date(classStartTime.getTime() + lateThresholdMs) ? 'late' : 'present';
+
       const attendance = await Attendance.findOneAndUpdate(
         { class: classId, student: userId, classroom: classroomNoLoc._id },
-        { status: 'present', markedBy: 'student', markedAt: now, faceRecognized: true },
+        { status, markedBy: 'student', markedAt: now, faceRecognized: true },
         { new: true, upsert: true }
       );
       return res.json({
         success: true,
         isValid: true,
-        message: 'Attendance marked successfully (face verified)',
-        data: { attendanceId: attendance._id, status: 'present', markedAt: attendance.markedAt }
+        message: `Attendance marked successfully as ${status} (face verified)`,
+        data: { attendanceId: attendance._id, status, markedAt: attendance.markedAt }
       });
     }
 
@@ -285,11 +292,18 @@ const checkLocationValidity = async (req, res) => {
     
     // Location is valid, now mark attendance
     
-    // Determine attendance status (late or present)
+    // Determine attendance status (late or present) - Corrected logic
     const now = new Date();
-    const classStartTime = classObj.isExtraClass 
-      ? new Date(`${classObj.extraClassDate.toISOString().split('T')[0]}T${classObj.schedule.startTime}:00`)
-      : new Date();  // Simplified - in production, calculate from schedule
+    let classStartTime;
+    
+    if (classObj.isExtraClass && classObj.extraClassDate) {
+      classStartTime = new Date(`${classObj.extraClassDate.toISOString().split('T')[0]}T${classObj.schedule.startTime}:00`);
+    } else {
+      // For regular classes, use today's date with the scheduled start time
+      const [hours, minutes] = classObj.schedule.startTime.split(':').map(Number);
+      classStartTime = new Date(now);
+      classStartTime.setHours(hours, minutes, 0, 0);
+    }
     
     const lateThreshold = 15; // minutes
     const lateThresholdMs = lateThreshold * 60 * 1000;
@@ -714,7 +728,16 @@ const getClassAttendance = async (req, res) => {
 
     // Find the classroom to get students
     const classroomId = classObj.classroom;
-    const classroom = await Classroom.findById(classroomId).populate('assignedStudents', 'firstName lastName email rollNumber'); // Adjust fields as needed
+    // Populate both manual assignments AND group-based assignments
+    const classroom = await Classroom.findById(classroomId)
+      .populate('assignedStudents', 'firstName lastName email rollNumber')
+      .populate({
+        path: 'group',
+        populate: {
+          path: 'students',
+          select: 'firstName lastName email rollNumber'
+        }
+      });
 
     if (!classroom) {
       return res.status(404).json({ 
@@ -723,6 +746,23 @@ const getClassAttendance = async (req, res) => {
       });
     }
 
+    // --- Dynamic Student Discovery (Self-healing) ---
+    // If the classroom is linked to a group, ensure all group students are considered "assigned"
+    let allStudents = [...(classroom.assignedStudents || [])];
+    
+    if (classroom.group && classroom.group.students) {
+      const existingIds = new Set(allStudents.map(s => s._id.toString()));
+      classroom.group.students.forEach(student => {
+        if (!existingIds.has(student._id.toString())) {
+          allStudents.push(student);
+          // Optional: persist this for future faster lookups? 
+          // For now, keep it dynamic to ensure accuracy.
+        }
+      });
+    }
+
+    console.log(`[Dashboard] Found ${allStudents.length} total students for class ${classId}`);
+
     // Get attendance for all students in this class
     const attendanceRecords = await Attendance.find({
       class: classId
@@ -730,12 +770,14 @@ const getClassAttendance = async (req, res) => {
 
     // Create a map of student IDs to attendance records
     const attendanceMap = attendanceRecords.reduce((map, record) => {
-      map[record.student._id.toString()] = record;
+      if (record.student && record.student._id) {
+        map[record.student._id.toString()] = record;
+      }
       return map;
     }, {});
 
-    // Build response with all students and their attendance status
-    const attendanceData = classroom.assignedStudents.map(student => {
+    // Build response with all discovered students and their attendance status
+    const attendanceData = allStudents.map(student => {
       const record = attendanceMap[student._id.toString()];
       return {
         student: {
@@ -758,6 +800,28 @@ const getClassAttendance = async (req, res) => {
         }
       };
     });
+
+    // Also include any students who have an attendance record but aren't in the 'assignment' list
+    // (This handles manual marking or edge cases)
+    attendanceRecords.forEach(record => {
+      if (record.student && !attendanceData.some(item => item.student._id.toString() === record.student._id.toString())) {
+        attendanceData.push({
+          student: {
+            _id: record.student._id,
+            firstName: record.student.firstName,
+            lastName: record.student.lastName,
+            email: record.student.email,
+            rollNumber: record.student.rollNumber
+          },
+          attendance: {
+            status: record.status,
+            markedBy: record.markedBy,
+            markedAt: record.markedAt,
+            notes: record.notes
+          }
+        });
+      }
+    });
     
     // Calculate statistics from the complete attendanceData array
     const stats = attendanceData.reduce((acc, item) => {
@@ -778,7 +842,7 @@ const getClassAttendance = async (req, res) => {
         },
         attendance: attendanceData,
         stats: {
-          total: classroom.assignedStudents.length,
+          total: attendanceData.length,
           present: stats.present,
           absent: stats.absent,
           late: stats.late,
@@ -824,11 +888,29 @@ const markAttendanceByFaceAndLocation = async (req, res) => {
     }
 
     // Check if attendance window is open
-    const skipWindowCheck = req.body.skipWindowCheck === true;
-    if (!skipWindowCheck && !classroom.isAttendanceWindowOpen(classId, classObj)) {
+    // Removed skipWindowCheck bypass for security - window MUST be open
+    if (!classroom.isAttendanceWindowOpen(classId, classObj)) {
       return res.status(400).json({ 
         success: false, 
         message: 'Attendance window is not open or class time has passed' 
+      });
+    }
+
+    // Check if student has already marked attendance
+    const existingAttendance = await Attendance.findOne({
+      class: classId,
+      student: studentId,
+      classroom: classroom._id
+    });
+    
+    if (existingAttendance) {
+      return res.status(400).json({
+        success: false,
+        message: 'Attendance already marked for this class',
+        data: {
+          status: existingAttendance.status,
+          markedAt: existingAttendance.markedAt
+        }
       });
     }
 
@@ -846,7 +928,7 @@ const markAttendanceByFaceAndLocation = async (req, res) => {
         console.warn(`[Proxy Attempt] Face verification failed for student ${studentId}. Similarity: ${faceVerificationResult.similarity || 'N/A'}`);
         return res.status(401).json({ 
             success: false, 
-            message: 'Face verification failed - Unauthorized user or proxy attempted' 
+            message: 'Face verification failed - This is not your face or image is unclear' 
         });
     }
 
@@ -886,44 +968,36 @@ const markAttendanceByFaceAndLocation = async (req, res) => {
 
     // Determine attendance status (late or present)
     const now = new Date();
-    const classStartTime = classObj.isExtraClass 
-      ? new Date(`${classObj.extraClassDate.toISOString().split('T')[0]}T${classObj.schedule.startTime}:00`)
-      : new Date();  // Simplified - in production, calculate from schedule
     
-    const lateThreshold = 15; // minutes
-    const lateThresholdMs = lateThreshold * 60 * 1000;
-    
+    // Fix: Proper late calculation using scheduled start time
+    const [hours, minutes] = classObj.schedule.startTime.split(':').map(Number);
+    const classStartTime = new Date(now);
+    classStartTime.setHours(hours, minutes, 0, 0);
+
+    const lateThresholdMs = 15 * 60 * 1000;
     const status = now > new Date(classStartTime.getTime() + lateThresholdMs) ? 'late' : 'present';
 
     // Record attendance with new smart fields
-    const attendance = await Attendance.findOneAndUpdate(
-      { 
-        class: classId, 
-        student: studentId,
-        classroom: classroom._id
-      },
-      {
-        status,
-        markedBy: faceRecognized ? 'facial-recognition' : 'location',
-        markedAt: now,
-        entryTime: now, // Initial entry
-        location: location ? {
-          latitude: location.latitude,
-          longitude: location.longitude,
-          accuracy: location.accuracy,
-          timestamp: now
-        } : undefined,
-        faceRecognized,
-        faceEmbedding: embeddingId,
-        faceSimilarity: faceSimilarity,
-        antiSpoofScore: req.body.antiSpoofScore || 0.95, // Simulated or from AI module
-        verificationScore: faceSimilarity || 0
-      },
-      { 
-        new: true, 
-        upsert: true 
-      }
-    );
+    const attendance = await Attendance.create({
+      class: classId, 
+      student: studentId,
+      classroom: classroom._id,
+      status,
+      markedBy: faceRecognized ? 'facial-recognition' : 'location',
+      markedAt: now,
+      entryTime: now, 
+      location: location ? {
+        latitude: location.latitude,
+        longitude: location.longitude,
+        accuracy: location.accuracy,
+        timestamp: now
+      } : undefined,
+      faceRecognized,
+      faceEmbedding: embeddingId,
+      faceSimilarity: faceSimilarity,
+      antiSpoofScore: req.body.antiSpoofScore || 0.98, // Simulated or from AI module
+      verificationScore: faceSimilarity || 0
+    });
 
     // LOGGING: If face recognition failed but location passed, log as suspicious if similarity was very low
     if (!faceRecognized && locationVerified && faceSimilarity < 0.5) {
