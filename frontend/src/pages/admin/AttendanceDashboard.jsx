@@ -55,12 +55,12 @@ const AttendanceDashboard = () => {
     }
   };
  
-   const handleBulk6MonthReport = async () => {
-     if (!window.confirm("This will analyze attendance for the last 6 months and send emails to parents of students with low attendance (<75%). Proceed?")) return;
+   const handleBulkMonthlyReport = async () => {
+     if (!window.confirm("This will analyze attendance for the last 1 month and send emails to parents of students with low attendance (<75%). Proceed?")) return;
      
      setIsBulkNotifying(true);
      try {
-       const response = await fetch(`${import.meta.env.VITE_API_URL}/email/bulk-6-month-report`, {
+       const response = await fetch(`${import.meta.env.VITE_API_URL}/email/bulk-monthly-report`, {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -70,14 +70,15 @@ const AttendanceDashboard = () => {
        });
        const data = await response.json();
        if (response.ok) {
-         toast.success(data.message || '6-Month reports sent successfully.');
+         toast.success(data.message || 'Monthly reports sent successfully.');
        } else {
          toast.error(data.message || 'Failed to trigger bulk reports.');
        }
      } catch (error) {
        toast.error('Network error occurred during bulk reporting.');
      } finally {
-       setIsBulkNotifying(false);
+       setIsBulkNotifying(true);
+       setIsBulkNotifying(false); // Add a small delay/state check if needed, but this is simple enough
      }
    };
 
@@ -217,11 +218,11 @@ const AttendanceDashboard = () => {
                         </button>
                       )}
                       <button 
-                        onClick={handleBulk6MonthReport}
+                        onClick={handleBulkMonthlyReport}
                         disabled={isBulkNotifying}
                         className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'bg-brand-primary/20 text-brand-light hover:bg-brand-primary hover:text-white' : 'bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white'} disabled:opacity-50`}
                       >
-                        <BarChart2 size={14} /> {isBulkNotifying ? 'Processing...' : 'Bulk 6-Month Reports'}
+                        <BarChart2 size={14} /> {isBulkNotifying ? 'Processing...' : 'Bulk 1-Month Reports'}
                       </button>
                     </div>
                   </div>

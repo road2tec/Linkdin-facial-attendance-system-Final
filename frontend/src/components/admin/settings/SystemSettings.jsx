@@ -127,7 +127,7 @@ export default function SystemSettings({ colors }) {
                 <select className={`p-1.5 rounded-md border ${
                   theme === 'dark' ? 'border-[#1E2733] bg-[#0A0E13]/80' : 'border-gray-300 bg-white'
                 } ${colors.text}`}>
-                  <option>6 months</option>
+                  <option>1 month</option>
                   <option>1 year</option>
                   <option>2 years</option>
                   <option>Never</option>

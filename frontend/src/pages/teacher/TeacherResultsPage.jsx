@@ -877,7 +877,7 @@ const TeacherResultsPage = () => {
               <table className="min-w-full">
                 <thead className={isDark ? 'bg-gray-900/50' : 'bg-gray-100/50'}>
                   <tr>
-                    {['Assessment', 'Student Name', 'Course', 'Marks', 'Action', 'Date'].map((header) => (
+                    {['Assessment', 'Student Name', 'Course', 'Marks', 'Action', 'Date', 'Remarks'].map((header) => (
                       <th key={header} className="px-8 py-5 text-left text-[9px] font-black uppercase tracking-[0.2em] text-gray-500">{header}</th>
                     ))}
                   </tr>
@@ -908,7 +908,12 @@ const TeacherResultsPage = () => {
                         </button>
                       </td>
                       <td className="px-8 py-6">
-                         <div className="text-[10px] font-bold text-gray-500 italic">"{result.remarks || 'No notes persisted'}"</div>
+                         <div className={`text-[10px] font-black tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                           {result.publishedAt ? new Date(result.publishedAt).toLocaleDateString() : new Date(result.createdAt).toLocaleDateString()}
+                         </div>
+                      </td>
+                      <td className="px-8 py-6">
+                         <div className="text-[10px] font-bold text-gray-500 italic">"{result.remarks || 'No notes'}"</div>
                       </td>
                     </tr>
                   ))}

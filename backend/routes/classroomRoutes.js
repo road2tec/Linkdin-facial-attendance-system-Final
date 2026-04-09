@@ -94,7 +94,7 @@ router.delete(
   authorizeRoles(['admin', 'department_head', 'teacher']),
   classroomController.deleteClassroom
 );
-router.post('/:id/upload-material', upload.array('files', 10),authMiddleware, classroomController.uploadResource);
+router.post('/:id/upload-material', authMiddleware, upload.array('files', 10), classroomController.uploadResource);
 
 
 // Post an announcement to a classroom

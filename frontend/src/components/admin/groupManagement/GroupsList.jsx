@@ -34,9 +34,9 @@ const GroupsList = ({ groups, onEdit, onView, onDelete }) => {
   return (
     <div className={`${colors.card} mt-4 overflow-hidden`}>
       <div className="max-h-96 overflow-y-auto">
-        {groups.map(group => (
+        {groups.map((group, index) => (
           <div 
-            key={group.id} 
+            key={group._id || group.id || `group-${index}`} 
             className={`p-4 border-b last:border-b-0 ${getBorderColor()} ${getHoverBgColor()} transition-colors cursor-pointer`}
           >
             <div className="flex justify-between items-center">

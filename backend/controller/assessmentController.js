@@ -39,6 +39,8 @@ const submitAssessment = async (req, res, next) => {
         const { classroomId, assessmentId } = req.params;
         const { answers } = req.body;
         const studentId = req.user.userId;
+        
+        console.log(`[DEBUG] Submission for assessment ${assessmentId}. Student: ${studentId}. Answers:`, JSON.stringify(answers));
 
         const existing = await Submission.findOne({ classroomId, assessmentId, student: studentId });
         if (existing) return res.status(400).json({ message: 'You have already submitted this assessment' });

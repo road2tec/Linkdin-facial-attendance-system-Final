@@ -155,12 +155,10 @@ const getClassroomAttendance = async (req, res) => {
     
     // Group by class for easier consumption
     const groupedByClass = attendanceData.reduce((acc, record) => {
-      
-
-      const classId = record?.class?._id?.toString();
+      const classId = record?.class?._id?.toString() || 'unassigned';
       if (!acc[classId]) {
         acc[classId] = {
-          className: record?.class?.title,
+          className: record?.class?.title || 'Unknown Session',
           records: []
         };
       }

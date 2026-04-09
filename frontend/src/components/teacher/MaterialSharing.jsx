@@ -135,6 +135,24 @@ const MaterialsSharing = ({ isDark, currentTheme, classroom }) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+  
+  // Robust download URL helper
+  const getDownloadUrl = (url) => {
+    if (!url) return '#';
+    if (url.includes('cloudinary.com')) return url.replace('/upload/', '/upload/fl_attachment/');
+    if (url.startsWith('http')) return url;
+    
+    let relativePath = url;
+    if (url.includes('uploads\\')) {
+      relativePath = '/uploads/' + url.split('uploads\\').pop().replace(/\\/g, '/');
+    } else if (url.includes('uploads/')) {
+      relativePath = '/uploads/' + url.split('uploads/').pop();
+    }
+    
+    const baseUrl = import.meta.env.VITE_SOCKET_URL || '';
+    const finalPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+    return `${baseUrl}${finalPath}`;
+  };
 
   // Handle opening file URL
   const handleShowFileUrl = (material) => {
@@ -350,7 +368,7 @@ const MaterialsSharing = ({ isDark, currentTheme, classroom }) => {
               {material.files.map((file, idx) => (
                 <a
                   key={idx}
-                  href={file.url}
+                  href={getDownloadUrl(file.url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={isDark ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'}
@@ -361,7 +379,7 @@ const MaterialsSharing = ({ isDark, currentTheme, classroom }) => {
             </div>
           ) : material.url ? (
             <a
-              href={material.url}
+              href={getDownloadUrl(material.url)}
               target="_blank"
               rel="noopener noreferrer"
               className={isDark ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'}

@@ -12,7 +12,7 @@ export default function EmailManagementSettings({ colors, theme }) {
 
   const [selectedStudentId, setSelectedStudentId] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
-  const [range, setRange] = useState('180d');
+  const [range, setRange] = useState('30d');
 
   useEffect(() => {
     dispatch(fetchStudents());
@@ -106,8 +106,8 @@ export default function EmailManagementSettings({ colors, theme }) {
               onChange={(e) => setRange(e.target.value)}
               className={`w-full p-2 rounded-md border ${theme === 'dark' ? 'border-[#1E2733] bg-[#0A0E13]/80 text-white' : 'border-gray-300 bg-white text-slate-800'}`}
             >
-              <option value="30d">Last 30 Days</option>
-              <option value="90d">Last 90 Days</option>
+              <option value="30d">Last 1 Month (Recommended)</option>
+              <option value="90d">Last 3 Months</option>
               <option value="180d">Last 6 Months</option>
             </select>
           </div>

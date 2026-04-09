@@ -564,7 +564,9 @@ const classroomController = {
       let uploadedFiles = [];
       if (files && files.length > 0) {
         uploadedFiles = files.map(file => ({
-          url: file.path,
+          // If it's a full URL (Cloudinary), use it as is. 
+          // Otherwise, construct a web-friendly path to our local /uploads folder.
+          url: file.path.startsWith('http') ? file.path : `/uploads/${file.filename}`,
           filename: file.originalname,
           mimetype: file.mimetype,
         }));

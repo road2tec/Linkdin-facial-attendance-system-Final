@@ -163,7 +163,7 @@ const StudentRow = ({ student, onEditStudent, onDeleteStudent, isDark }) => {
              onClick={handleEmailParent}
              disabled={sending}
              className={`flex items-center gap-1.5 px-3 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${isDark ? 'bg-purple-500/10 text-purple-400 hover:bg-purple-500 hover:text-white' : 'bg-purple-50 text-purple-600 hover:bg-purple-600 hover:text-white'} disabled:opacity-50`}
-             title="Email Parent 6-Month Report"
+             title="Email Parent 1-Month Report"
            >
              {sending ? <Loader size={14} className="animate-spin" /> : <Send size={14} />}
              Email Parent

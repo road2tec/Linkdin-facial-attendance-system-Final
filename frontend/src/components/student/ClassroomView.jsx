@@ -114,8 +114,30 @@ const ClassroomView = ({
 
   // Transform Cloudinary URL to force file download with correct headers
   const getDownloadUrl = (url) => {
-    if (!url || !url.includes('cloudinary.com')) return url;
-    return url.replace('/upload/', '/upload/fl_attachment/');
+    if (!url) return '#';
+    
+    // Handle Cloudinary
+    if (url.includes('cloudinary.com')) {
+      return url.replace('/upload/', '/upload/fl_attachment/');
+    }
+    
+    // Handle absolute URLs
+    if (url.startsWith('http')) {
+      return url;
+    }
+    
+    let relativePath = url;
+    // Handle physical paths from legacy data (e.g., C:\...\uploads\file.pdf)
+    if (url.includes('uploads\\')) {
+      relativePath = '/uploads/' + url.split('uploads\\').pop().replace(/\\/g, '/');
+    } else if (url.includes('uploads/')) {
+      relativePath = '/uploads/' + url.split('uploads/').pop();
+    }
+    
+    // Handle local paths by prepending backend URL
+    const baseUrl = import.meta.env.VITE_SOCKET_URL || '';
+    const finalPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+    return `${baseUrl}${finalPath}`;
   };
 
   // Helper function to check if a specific day of week is included in daysOfWeek array

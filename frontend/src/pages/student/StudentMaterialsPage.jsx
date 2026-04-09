@@ -32,6 +32,23 @@ const StudentMaterialsPage = () => {
   const allMaterials = React.useMemo(() => {
     if (!classrooms || !Array.isArray(classrooms)) return [];
     
+    const getFullUrl = (rawUrl) => {
+      if (!rawUrl) return null;
+      if (rawUrl.startsWith('http')) return rawUrl;
+      
+      let relativePath = rawUrl;
+      // Robustly handle physical paths from older data (e.g., C:\...\uploads\file.pdf)
+      if (rawUrl.includes('uploads\\')) {
+        relativePath = '/uploads/' + rawUrl.split('uploads\\').pop().replace(/\\/g, '/');
+      } else if (rawUrl.includes('uploads/')) {
+        relativePath = '/uploads/' + rawUrl.split('uploads/').pop();
+      }
+      
+      const baseUrl = import.meta.env.VITE_SOCKET_URL || '';
+      const finalPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+      return `${baseUrl}${finalPath}`;
+    };
+
     let docs = [];
     classrooms.forEach(cls => {
       if (cls.sharedResources && cls.sharedResources.length > 0) {
@@ -39,11 +56,7 @@ const StudentMaterialsPage = () => {
           docs.push({
             title: res.title,
             type: res.type,
-            url: (() => {
-              const rawUrl = (res.files && res.files.length > 0) ? res.files[0].url : res.link;
-              if (!rawUrl) return null;
-              return rawUrl.startsWith('http') ? rawUrl : `${import.meta.env.VITE_API_URL}${rawUrl}`;
-            })(),
+            url: getFullUrl((res.files && res.files.length > 0) ? res.files[0].url : res.link),
             uploadedAt: res.createdAt,
             uploadedBy: res.uploadedBy ? (res.uploadedBy.firstName + ' ' + res.uploadedBy.lastName) : 'Faculty',
             courseName: cls.course?.courseName || 'General',
@@ -162,9 +175,9 @@ const StudentMaterialsPage = () => {
                   <div className="flex gap-2">
                     {material.url && (
                         <a 
-                            href={material.url.startsWith('http') 
-                                ? (material.url.includes('cloudinary.com') ? material.url.replace('/upload/', '/upload/fl_attachment/') : material.url)
-                                : `${import.meta.env.VITE_API_URL}${material.url}`
+                            href={material.url.includes('cloudinary.com') 
+                                ? material.url.replace('/upload/', '/upload/fl_attachment/') 
+                                : material.url
                             }
                             target="_blank"
                             rel="noopener noreferrer"
@@ -177,7 +190,7 @@ const StudentMaterialsPage = () => {
                     )}
                     {material.url && (
                         <a 
-                            href={material.url.startsWith('http') ? material.url : `${import.meta.env.VITE_API_URL}${material.url}`}
+                            href={material.url}
                             target="_blank" 
                             rel="noopener noreferrer"
                             className={`p-2 rounded-lg transition-colors ${theme === 'dark' ? 'hover:bg-slate-700 text-slate-400' : 'hover:bg-slate-100 text-slate-500'}`}

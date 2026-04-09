@@ -139,9 +139,9 @@ const AddStudentsModal = ({
                   </p>
                 ) : (
                   <ul className="divide-y divide-gray-700">
-                    {filteredStudents.map(student => (
+                    {filteredStudents.map((student, index) => (
                       <li 
-                        key={student._id || student.id}
+                        key={student._id || student.id || `student-avail-${index}`}
                         className={`p-3 flex items-center justify-between cursor-pointer ${
                           selectedStudents.some(s => (s._id || s.id) === (student._id || student.id)) ? 
                             (theme === 'dark' ? 'bg-blue-900 bg-opacity-20' : 'bg-blue-50') : 
@@ -181,9 +181,9 @@ const AddStudentsModal = ({
                     No students selected
                   </span>
                 ) : (
-                  selectedStudents.map(student => (
+                  selectedStudents.map((student, index) => (
                     <div 
-                      key={student._id || student.id}
+                      key={student._id || student.id || `student-sel-${index}`}
                       className={`${colors.button.primary} text-sm px-2 py-1 rounded-full flex items-center`}
                     >
                       {formatStudentName(student)}
