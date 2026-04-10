@@ -26,7 +26,8 @@ const DEFAULT_ADMIN = {
     country: 'Adminland'
   },
   dateOfBirth: new Date('2000-01-01'),
-  gender: 'other'
+  gender: 'other',
+  status: 'active'
 };
 
 const seedAdmin = async () => {
