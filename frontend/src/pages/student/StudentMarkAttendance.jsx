@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTheme } from '../../context/ThemeProvider';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AutoFaceDetector from '../../components/AutoFaceDetector';
 import { 
   Camera, 
@@ -63,16 +64,13 @@ const StudentMarkAttendance = () => {
         try {
             toast.info('Checking it\'s you...');
             
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/attendance/mark`,
+            const response = await axiosInstance.post(
+                '/attendance/mark',
                 {
                     classId,
                     faceEmbeddingData: embedding,
                     location: location,
                     skipWindowCheck: true
-                },
-                {
-                    headers: { Authorization: `Bearer ${token}` }
                 }
             );
 

@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 // Auth Components
@@ -53,12 +54,43 @@ import ParentAttendance from "./pages/parent/ParentAttendance";
 import ParentResults from "./pages/parent/ParentResults";
 import ParentCourses from "./pages/parent/ParentCourses";
 // import ClassroomSystem from "./pages/student/StudentClassroomPortal";
+import DashboardLayout from './components/DashboardLayout';
+import UserProfile from './pages/UserProfile';
+import UserSettings from './pages/UserSettings';
 
 
 
 function App() {
   return (
-    <Routes>
+    <>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          className: 'premium-toast',
+          style: {
+            background: '#0F172A',
+            color: '#fff',
+            borderRadius: '16px',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            fontWeight: 'bold',
+            fontSize: '13px',
+            fontFamily: 'Inter, sans-serif'
+          },
+          success: {
+            iconTheme: {
+              primary: '#10B981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#EF4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+      <Routes>
       {/* Public routes */}
       {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
       <Route path="/signup" element={<Signup />} />
@@ -68,6 +100,22 @@ function App() {
       <Route path="/capture-image" element={
         <ProtectedRoute>
           <CaptureImage />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <UserProfile />
+          </DashboardLayout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/settings" element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <UserSettings />
+          </DashboardLayout>
         </ProtectedRoute>
       } />
       
@@ -156,6 +204,7 @@ function App() {
       {/* Catch all route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+   </>
   );
 }
 

@@ -129,7 +129,7 @@ const StudentDashboardOverview = () => {
                     time: cls.schedule.startTime + ' - ' + cls.schedule.endTime,
                     date: sessionDate,
                     dateFormatted: sessionDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-                    attendanceOpen: (clsEntry.attendanceWindow?.isOpen || (today >= sessionDate && today <= sessionEndDate)) || false
+                    attendanceOpen: clsEntry.attendanceWindow?.isOpen || false
                   });
                   break; 
                 }
@@ -242,9 +242,8 @@ const StudentDashboardOverview = () => {
 
           // Hard lock: Attendance is only valid during the scheduled window (plus 1 min buffer)
           const isTimeValid = now <= new Date(endTime.getTime() + 60000); 
-          const isOngoing = now >= startTime && now <= endTime;
 
-          if ((clsEntry.attendanceWindow?.isOpen || isOngoing) && isTimeValid) {
+          if (clsEntry.attendanceWindow?.isOpen && isTimeValid) {
             active.push({
               classId: clsEntry.class?._id,
               courseName: clsEntry.class?.title || classroom.course?.courseName,

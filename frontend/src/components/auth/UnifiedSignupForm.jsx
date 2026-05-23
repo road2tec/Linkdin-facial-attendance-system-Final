@@ -59,10 +59,10 @@ const UnifiedSignupForm = ({
             onChange={handleChange}
             className={`${inputClass} appearance-none cursor-pointer pr-12`}
           >
-            <option value="" disabled>I am a...</option>
-            <option value="student">Student Account</option>
-            <option value="teacher">Teacher Account</option>
-            <option value="parent">Parent Account</option>
+            <option value="" disabled className={isDark ? 'bg-[#0F172A] text-slate-500' : 'bg-white text-slate-400'}>I am a...</option>
+            <option value="student" className={isDark ? 'bg-[#0F172A] text-white' : 'bg-white text-slate-900'}>Student Account</option>
+            <option value="teacher" className={isDark ? 'bg-[#0F172A] text-white' : 'bg-white text-slate-900'}>Teacher Account</option>
+            <option value="parent" className={isDark ? 'bg-[#0F172A] text-white' : 'bg-white text-slate-900'}>Parent Account</option>
           </select>
           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
             <ChevronDown size={18} />
@@ -174,9 +174,9 @@ const UnifiedSignupForm = ({
                   onChange={handleChange}
                   className={`${inputClass} appearance-none pr-10`}
                 >
-                  <option value="">Select Department</option>
+                  <option value="" className={isDark ? 'bg-[#0F172A] text-slate-500' : 'bg-white text-slate-400'}>Select Department</option>
                   {departments?.map(dept => (
-                    <option key={dept._id} value={dept._id}>{dept.name}</option>
+                    <option key={dept._id} value={dept._id} className={isDark ? 'bg-[#0F172A] text-white' : 'bg-white text-slate-900'}>{dept.name}</option>
                   ))}
                 </select>
                 <div className="absolute top-[38px] right-4 flex items-center pointer-events-none text-slate-400">

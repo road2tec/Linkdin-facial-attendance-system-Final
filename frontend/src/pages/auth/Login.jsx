@@ -121,13 +121,17 @@ const LoginPage = () => {
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
         </button>
 
-        <div className="text-center mt-10 p-8 rounded-[32px] border border-dashed border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02]">
-          <p className={`text-sm font-bold mb-4 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+        <div className={`text-center mt-10 p-8 rounded-[32px] border border-dashed transition-all duration-500 ${
+          isDark 
+            ? 'border-white/10 bg-white/[0.03] shadow-[inner_0_0_12px_rgba(255,255,255,0.01)]' 
+            : 'border-slate-200 bg-slate-50/80 shadow-sm'
+        }`}>
+          <p className={`text-sm font-bold mb-4 transition-colors ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
             New here? Create an account
           </p>
           <Link 
             to="/signup" 
-            className="inline-flex items-center gap-2 text-brand-primary font-black uppercase tracking-widest hover:underline text-xs"
+            className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 font-black uppercase tracking-widest hover:underline text-xs transition-colors"
           >
             Create Account <Activity size={16} />
           </Link>
