@@ -169,7 +169,7 @@ const AttendanceDashboard = () => {
 
         {/* Navigation Tabs */}
         <div className="flex gap-4 p-2 rounded-[24px] bg-slate-100 dark:bg-white/5 w-fit overflow-x-auto max-w-full custom-scrollbar">
-           {['overview', 'classes', 'sessions', 'courses', 'defaulters'].map((tab) => (
+           {['overview', 'classes', 'sessions', 'courses'].map((tab) => (
              <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -338,6 +338,86 @@ const AttendanceDashboard = () => {
                    </tbody>
                  </table>
                </div>
+            </div>
+          )}
+
+          {activeTab === 'courses' && (
+            <div className="space-y-8">
+              {/* Chart Card */}
+              <div className={`glass-card p-10 rounded-[40px] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'}`}>
+                <h3 className={`text-xl font-black tracking-tight mb-10 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  Attendance Rate by Course
+                </h3>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={attendanceByCourse}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#ffffff10' : '#e2e8f0'} />
+                      <XAxis dataKey="courseCode" axisLine={false} tickLine={false} tick={{fill: isDark ? '#64748b' : '#94a3b8', fontSize: 10, fontWeight: 900}} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fill: isDark ? '#64748b' : '#94a3b8', fontSize: 10, fontWeight: 900}} unit="%" />
+                      <Tooltip 
+                        cursor={{fill: 'transparent'}}
+                        contentStyle={{backgroundColor: isDark ? '#0f172a' : '#fff', borderRadius: '16px', border: 'none'}}
+                      />
+                      <Bar dataKey="attendanceRate" name="Attendance Rate" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={30} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Table Card */}
+              <div className={`glass-card p-10 rounded-[40px] overflow-hidden ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200'}`}>
+                <h3 className={`text-xl font-black tracking-tight mb-8 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  Course Registry Performance
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full">
+                    <thead className={isDark ? 'bg-white/5' : 'bg-slate-50'}>
+                      <tr>
+                        {['Code', 'Course Name', 'Avg Attendance', 'Total Records', 'Breakdown'].map((header) => (
+                          <th key={header} className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-inherit">
+                      {(attendanceByCourse || []).map((course, index) => (
+                        <tr key={index} className={`transition-colors ${isDark ? 'divide-white/5 hover:bg-white/5' : 'divide-slate-100 hover:bg-slate-50'}`}>
+                          <td className="px-6 py-4 text-xs font-black text-brand-primary uppercase tracking-widest">
+                            {course.courseCode || 'N/A'}
+                          </td>
+                          <td className="px-6 py-4 text-xs font-black text-slate-500 dark:text-slate-300">
+                            {course.courseName || 'General Course'}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`text-sm font-black ${course.attendanceRate >= 75 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                              {Math.round(course.attendanceRate)}%
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-xs font-black text-slate-400">
+                            {course.totalAttendance} Checks
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex gap-2">
+                              <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500">
+                                {course.presentCount} P
+                              </span>
+                              <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest bg-rose-500/10 text-rose-500">
+                                {course.absentCount} A
+                              </span>
+                              {course.lateCount > 0 && (
+                                <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest bg-amber-500/10 text-amber-500">
+                                  {course.lateCount} L
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           )}
         </div>
