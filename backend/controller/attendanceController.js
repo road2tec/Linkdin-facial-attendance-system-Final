@@ -22,8 +22,9 @@ const calculateEuclideanDistance = (embedding1, embedding2) => {
 
 // Function to verify face embedding against registered user
 const verifyFaceEmbedding = async (faceEmbeddingData, studentId) => {
-  // Strict threshold: Euclidean distance < 0.45 = same person, >= 0.45 = different person
-  const DISTANCE_THRESHOLD = 0.45;
+  // Strict threshold: Euclidean distance < 0.40 = same person, >= 0.40 = different person
+  // (Reduced from 0.40 to prevent false matches from other people's faces)
+  const DISTANCE_THRESHOLD = 0.40;
   
   try {
     // Parse the embedding if it's a string
@@ -67,6 +68,12 @@ const verifyFaceEmbedding = async (faceEmbeddingData, studentId) => {
     // Get the top match
     const bestMatch = similarities[0];
     
+    // Fetch student name for logging
+    const student = await User.findById(studentId);
+    const studentName = student ? `${student.firstName} ${student.lastName}` : `ID: ${studentId}`;
+    
+    console.log(`[Face Recognition Match] Student: ${studentName} | Distance: ${bestMatch.distance.toFixed(4)} | Threshold: ${DISTANCE_THRESHOLD} | Result: ${bestMatch.distance < DISTANCE_THRESHOLD ? 'PASSED' : 'FAILED'}`);
+
     // Check if the best match distance is below the strict threshold
     if (bestMatch.distance >= DISTANCE_THRESHOLD) {
       return { 

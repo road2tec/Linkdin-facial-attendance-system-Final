@@ -119,11 +119,12 @@ const embeddingController = {
       // Get the top match
       const bestMatch = similarities[0];
 
-      // Strict threshold: face-api.js distance < 0.45 = same person, >= 0.45 = different person
-      const DISTANCE_THRESHOLD = 0.45;
+      // Strict threshold: face-api.js distance < 0.40 = same person, >= 0.40 = different person
+      // (Reduced from 0.40 to prevent false matches from other people's faces)
+      const DISTANCE_THRESHOLD = 0.40;
 
       if (bestMatch.distance >= DISTANCE_THRESHOLD) {
-        console.log('Best match distance:', bestMatch.distance, '(rejected - above threshold)');
+        console.log(`[Scan Match Failed] Best match: ${bestMatch.user?.firstName} ${bestMatch.user?.lastName} | Distance: ${bestMatch.distance.toFixed(4)} (rejected - above threshold ${DISTANCE_THRESHOLD})`);
         await logRecognitionAttempt(req, {
           resultType: 'unknown',
           similarity: bestMatch.distance,
@@ -139,7 +140,7 @@ const embeddingController = {
       }
 
       // Return the best match
-      console.log('Face matched:', bestMatch.user?.firstName, bestMatch.user?.lastName, '| distance:', bestMatch.distance);
+      console.log('Face matched:', bestMatch.user?.firstName, bestMatch.user?.lastName, '| distance:', bestMatch.distance.toFixed(4));
       await logRecognitionAttempt(req, {
         resultType: 'matched',
         similarity: bestMatch.distance,
