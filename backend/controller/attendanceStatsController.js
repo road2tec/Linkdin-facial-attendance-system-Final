@@ -3,6 +3,7 @@ const User = require('../model/user');
 const Classroom = require('../model/classroom');
 const Class = require('../model/class');
 const mongoose = require('mongoose');
+const Course = require('../model/course');
 
 // Helper function to get date range
 const getDateRange = (req) => {
@@ -339,7 +340,7 @@ const getOverallAttendance = async (req, res) => {
       },
       { $project: {
           className: '$classInfo.name',
-          courseName: '$courseInfo.name',
+          courseName: '$courseInfo.courseName',
           groupName: '$groupInfo.name',
           totalAttendance: 1,
           present: 1,
@@ -514,7 +515,7 @@ const getOverallAttendance = async (req, res) => {
                         ]
                       }
                     },
-                    in: '$$course.name'
+                    in: '$$course.courseName'
                   }
                 }
               }
@@ -741,8 +742,8 @@ const getOverallAttendance = async (req, res) => {
       { $sort: { attendanceRate: -1 } }
     ]);
     
-    // Get attendance by course
-    const attendanceByCourse = await Attendance.aggregate([
+    // Get aggregated attendance by course
+    const rawAttendanceByCourse = await Attendance.aggregate([
       { $match: dateFilter },
       // Lookup class to get course ID
       { $lookup: {
@@ -792,8 +793,8 @@ const getOverallAttendance = async (req, res) => {
         } 
       },
       { $project: {
-          courseName: '$courseInfo.name',
-          courseCode: '$courseInfo.code',
+          courseName: '$courseInfo.courseName',
+          courseCode: '$courseInfo.courseCode',
           totalAttendance: 1,
           present: {
             $ifNull: [
@@ -859,9 +860,37 @@ const getOverallAttendance = async (req, res) => {
             ]
           }
         }
-      },
-      { $sort: { attendanceRate: -1 } }
+      }
     ]);
+
+    // Fetch all courses in database to ensure full visibility (e.g. newly added by teacher)
+    const allCourses = await Course.find().lean();
+
+    // Index aggregated stats by course ID for fast lookups
+    const statsMap = {};
+    rawAttendanceByCourse.forEach(item => {
+      if (item._id) {
+        statsMap[item._id.toString()] = item;
+      }
+    });
+
+    // Merge registered courses with attendance stats (default to 0 if no records exist)
+    const attendanceByCourse = allCourses.map(course => {
+      const stats = statsMap[course._id.toString()];
+      return {
+        _id: course._id,
+        courseName: course.courseName,
+        courseCode: course.courseCode,
+        totalAttendance: stats ? stats.totalAttendance : 0,
+        presentCount: stats ? stats.presentCount : 0,
+        absentCount: stats ? stats.absentCount : 0,
+        lateCount: stats ? stats.lateCount : 0,
+        attendanceRate: stats ? stats.attendanceRate : 0
+      };
+    });
+
+    // Sort by attendanceRate in descending order to match original UI expectations
+    attendanceByCourse.sort((a, b) => b.attendanceRate - a.attendanceRate);
     
     const sessionLogs = await Attendance.aggregate([
       { $match: dateFilter },
